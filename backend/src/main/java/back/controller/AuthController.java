@@ -7,20 +7,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import back.model.Users;
+import back.model.Word;
 import back.repository.UserRepository;
+import back.repository.WordRepository;
 import dto.LoginRequest;
 import dto.LoginResponse;
 
 @RestController
 @RequestMapping("/api")
 public class AuthController {
+    @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private WordRepository wordRepository;
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest request) {
         Users user = userRepository.findByEmail(request.getEmail());
@@ -49,6 +55,10 @@ public class AuthController {
             newUser.setParola(request.getParola());
             userRepository.save(newUser);
             return new LoginResponse(true, "Inregistrare reusita",0);
+    }
+    @GetMapping("/getWordsall")
+    public List<Word> getWordsall() {
+        return wordRepository.findAll();
     }
     
     
