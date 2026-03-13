@@ -1,0 +1,134 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Gradientul de fundal din imaginea ta */
+    background: linear-gradient(135deg, #c7a1c4 0%, #a885a5 50%, #2b1d31 100%);
+}
+
+/* Butonul înapoi (stânga sus) */
+.back-button {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    background: rgba(255, 255, 255, 0.3);
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    color: #000;
+    text-decoration: none;
+    font-size: 1.5rem;
+}
+
+/* Cardul principal */
+.main-card {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(15px);
+    width: 850px;
+    height: 500px;
+    border-radius: 50px; /* Margini foarte rotunjite ca în poză */
+    display: flex;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Stânga: Formularul */
+.form-container {
+    flex: 1.2;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h2 {
+    color: #4a3a4b;
+    margin-bottom: 40px;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+form {
+    width: 100%;
+}
+
+.input-field {
+    width: 100%;
+    border-bottom: 1.5px solid #4a3a4b;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+}
+
+.input-field input {
+    background: transparent;
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 1rem;
+    color: #4a3a4b;
+}
+
+.input-field input::placeholder {
+    color: #6d5b6e;
+}
+
+.input-field i {
+    color: #000;
+    font-size: 1.1rem;
+}
+
+/* Butonul Sign Up */
+.signup-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 50px;
+    border: none;
+    background: linear-gradient(to right, #4a3a4b, #2b1d31);
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin-top: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.footer-text {
+    margin-top: 30px;
+    font-size: 0.9rem;
+    color: #4a3a4b;
+    cursor: pointer;
+}
+
+/* Dreapta: Containerul pentru imagine */
+.image-container {
+    flex: 1;
+    background: #0d0d15; /* Fundal închis pentru imagine */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15px;
+    border-radius: 40px;
+}
+
+.illustration {
+    width: 90%;
+    height: 90%;
+    /* Când ai poza cu cactus, o pui aici */
+    background: url('../image/cactus.png') no-repeat center center/contain;
+    /* Momentan punem un placeholder colorat să vezi zona */
+    background-color: #1a1a2e; 
+    border-radius: 30px;
+}
