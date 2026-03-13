@@ -127,7 +127,7 @@ form {
     width: 90%;
     height: 90%;
     /* Când ai poza cu cactus, o pui aici */
-    background: url('../image/cactus.png') no-repeat center center/contain;
+    background: url('../images/poza7.png') no-repeat center center/contain;
     /* Momentan punem un placeholder colorat să vezi zona */
     background-color: #1a1a2e; 
     border-radius: 30px;
