@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         localStorage.setItem('userId', data.userId);
                     }
 
-                    window.location.href = "home.html";
+                    window.location.href = "pag.html";
                 } else {
                     const errorData = await response.json();
                     alert("Eroare: " + (errorData.message || "A apărut o problemă!"));
