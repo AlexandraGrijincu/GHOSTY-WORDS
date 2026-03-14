@@ -13,15 +13,15 @@ const verbe = [
 // --- VARIABILE STARE ---
 let vieti = 3;
 let scor = 0;
-let vitezaBaza = 1.0;
+let vitezaBaza = 1.2;
 let vitezaCurenta = vitezaBaza;
 let pozitieX = -200; 
-let pozitieY = -200; 
+let pozitieY = 100; 
 let verbCurent = {};
 let gameActive = true;
 let esteInAnimatiePersonaj = false; 
 let pauzaFantoma = false; 
-let recognition; // Variabila pentru Speech API
+let recognition;
 
 // --- ELEMENTE DOM ---
 const ghostCont = document.getElementById('container-fantoma');
@@ -32,17 +32,23 @@ const titluFinal = document.getElementById('titlu-final');
 const scorTextFinal = document.getElementById('scor-final');
 const btnNext = document.getElementById('btn-next');
 const personajElem = document.getElementById("personaj");
-const statusMic = document.getElementById('status-microfon'); // Asigură-te că l-ai adăugat în HTML
+const cuvantDetectatElem = document.getElementById('cuvant-detectat');
 
-const imaginiAnimatie = ["../images/idel.png", "../images/001.png", "../images/002.png", "../images/003.png"];
+// Căile imaginilor - Verifică să fie corecte în folderul tău!
+const imaginiAnimatie = [
+    "../images/idel.png", 
+    "../images/001.png", 
+    "../images/002.png", 
+    "../images/003.png"
+];
 
-// --- CONFIGURARE VOCE ---
+// --- CONFIGURARE RECUNOAȘTERE VOCALĂ ---
 
 function initializareRecunoastereVocala() {
     window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     
     if (!window.SpeechRecognition) {
-        console.error("Browser-ul nu suportă Web Speech API");
+        alert("Browser-ul nu suportă recunoașterea vocală. Folosește Chrome sau Edge.");
         return;
     }
 
@@ -53,16 +59,18 @@ function initializareRecunoastereVocala() {
 
     recognition.onresult = (event) => {
         const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
-        console.log("Detectat:", transcript);
+        if (cuvantDetectatElem) cuvantDetectatElem.innerText = "Ai spus: " + transcript;
         verificaRaspuns(transcript);
     };
 
     recognition.onend = () => {
-        if (gameActive) recognition.start(); // Repornește automat ascultarea
+        if (gameActive) {
+            try { recognition.start(); } catch(e) {}
+        }
     };
 
     recognition.onerror = (event) => {
-        console.error("Eroare microfon:", event.error);
+        console.error("Eroare Speech:", event.error);
     };
 
     recognition.start();
@@ -71,33 +79,39 @@ function initializareRecunoastereVocala() {
 async function verificaRaspuns(pronuntie) {
     if (!gameActive || pauzaFantoma) return;
 
-    // Normalizăm input-ul: scoatem "to" de la început dacă există
-    let raspunsUtilizator = pronuntie.replace(/^to\s+/, "");
-    let raspunsCorect = verbCurent.en.replace(/^to\s+/, "");
+    // Eliminăm "to " din ambele părți pentru a fi mai permisiv
+    let raspunsUtilizator = pronuntie.replace(/^to\s+/, "").trim();
+    let raspunsCorect = verbCurent.en.replace(/^to\s+/, "").trim();
 
-    if (raspunsUtilizator === raspunsCorect || pronuntie === verbCurent.en) {
+    if (raspunsUtilizator === raspunsCorect || pronuntie.includes(raspunsCorect)) {
         scor += 10;
         scorAfisat.innerText = "Scor: " + scor;
+        if (cuvantDetectatElem) cuvantDetectatElem.innerText = "Corect! 🎉";
 
         await pornesteAnimatiePersonaj(); 
 
         if (scor >= 100) {
             terminaJocul(true);
         } else {
-            vitezaCurenta += 0.1;
-            // spawnFantoma() este apelat la finalul animației personajului
+            vitezaCurenta += 0.15;
+            // spawnFantoma() este apelat automat la finalul animației personajului
         }
     }
 }
 
-// --- LOGICA JOCULUI ---
+// --- LOGICA MISCARE FANTOMA ---
 
 function spawnFantoma() {
     if (!gameActive) return;
     verbCurent = verbe[Math.floor(Math.random() * verbe.length)];
     bubble.innerText = verbCurent.ro;
+    
+    // Resetăm poziția fantomei
     pozitieX = -200; 
     pozitieY = -100; 
+    
+    ghostCont.style.right = pozitieX + "px";
+    ghostCont.style.top = pozitieY + "px";
 }
 
 function joc() {
@@ -109,10 +123,15 @@ function joc() {
     }
 
     pozitieX += vitezaCurenta;
-    pozitieY += vitezaCurenta * 0.5;
+    // Efect de plutire ușoară pe verticală
+    //pozitieY = 100 + Math.sin(Date.now() / 500) * 20;
+    //pozitieY += vitezaCurenta * 0.5; // Mișcare diagonală
+    pozitieY = 200 + Math.sin(Date.now() / 500) * 30;
+    
     ghostCont.style.right = pozitieX + "px";
     ghostCont.style.top = pozitieY + "px";
 
+    // Dacă fantoma ajunge la personaj (aprox 60% din lățime)
     if (pozitieX > window.innerWidth * 0.45) {
         pierdeViata();
     } else {
@@ -127,13 +146,55 @@ async function pierdeViata() {
         inima.classList.add('lovita');
     }
     vieti--;
+
     if (vieti <= 0) {
         terminaJocul(false);
     } else {
         spawnFantoma();
+        // Mică pauză să nu apară instant
+        pauzaFantoma = true;
+        setTimeout(() => { pauzaFantoma = false; }, 500);
         requestAnimationFrame(joc); 
     }
 }
+
+// --- ANIMATIE PERSONAJ ---
+
+const asteaptaMs = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+function seteazaIdlePersonaj() {
+    if (personajElem) personajElem.style.backgroundImage = `url('${imaginiAnimatie[0]}')`;
+}
+
+async function pornesteAnimatiePersonaj() {
+    if (esteInAnimatiePersonaj) return;
+    esteInAnimatiePersonaj = true;
+    pauzaFantoma = true; 
+
+    // Cadre de atac
+    for (let i = 1; i < imaginiAnimatie.length; i++) {
+        personajElem.style.backgroundImage = `url('${imaginiAnimatie[i]}')`;
+        await asteaptaMs(100);
+    }
+
+    personajElem.classList.add("stare-speciala");
+    await asteaptaMs(400); 
+    personajElem.classList.remove("stare-speciala");
+
+    // Revenire la idle
+    for (let i = imaginiAnimatie.length - 2; i >= 0; i--) {
+        personajElem.style.backgroundImage = `url('${imaginiAnimatie[i]}')`;
+        await asteaptaMs(100);
+    }
+
+    seteazaIdlePersonaj();
+    esteInAnimatiePersonaj = false;
+    pauzaFantoma = false; 
+    
+    if (gameActive) spawnFantoma(); 
+}
+
+// --- FINAL JOC ---
 
 async function terminaJocul(aCastigat) {
     gameActive = false;
@@ -151,44 +212,9 @@ async function terminaJocul(aCastigat) {
         titluFinal.style.color = "#ff4d4d";
         btnNext.classList.add('ascuns');
     }
+    
     await salveazaScorul(scor);
 }
-
-// --- ANIMATIE PERSONAJ ---
-
-const asteaptaMs = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-function seteazaIdlePersonaj() {
-    if (personajElem) personajElem.style.backgroundImage = `url('${imaginiAnimatie[0]}')`;
-}
-
-async function pornesteAnimatiePersonaj() {
-    if (esteInAnimatiePersonaj) return;
-    esteInAnimatiePersonaj = true;
-    pauzaFantoma = true; 
-
-    for (let i = 1; i < imaginiAnimatie.length; i++) {
-        await asteaptaMs(100);
-        personajElem.style.backgroundImage = `url('${imaginiAnimatie[i]}')`;
-    }
-
-    personajElem.classList.add("stare-speciala");
-    await asteaptaMs(500); 
-    personajElem.classList.remove("stare-speciala");
-
-    for (let i = imaginiAnimatie.length - 2; i >= 0; i--) {
-        await asteaptaMs(100);
-        personajElem.style.backgroundImage = `url('${imaginiAnimatie[i]}')`;
-    }
-
-    seteazaIdlePersonaj();
-    esteInAnimatiePersonaj = false;
-    pauzaFantoma = false; 
-    
-    if (gameActive) spawnFantoma(); 
-}
-
-// --- SALVARE SCOR ---
 
 async function salveazaScorul(scorFinal) {
     try {
@@ -200,18 +226,10 @@ async function salveazaScorul(scorFinal) {
     } catch (e) { console.error("Eroare salvare scor"); }
 }
 
-// --- ANIMATIE VRĂJITOARE ---
-const imaginiVrajitoare = ["../imagini/vrajitoare/v1.png", "../imagini/vrajitoare/v2.png", "../imagini/vrajitoare/v3.png"];
-let frameVrajitoare = 0;
-
-setInterval(() => {
-    frameVrajitoare = (frameVrajitoare + 1) % imaginiVrajitoare.length;
-    const vImg = document.getElementById('vrajitoare');
-    if (vImg) vImg.src = imaginiVrajitoare[frameVrajitoare];
-}, 150);
-
-// --- START ---
-seteazaIdlePersonaj();
-spawnFantoma();
-initializareRecunoastereVocala();
-requestAnimationFrame(joc);
+// --- INITIALIZARE ---
+window.onload = () => {
+    seteazaIdlePersonaj();
+    spawnFantoma();
+    initializareRecunoastereVocala();
+    requestAnimationFrame(joc);
+};
