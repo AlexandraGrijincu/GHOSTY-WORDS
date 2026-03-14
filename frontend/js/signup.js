@@ -28,17 +28,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify(payload)
                 });
 
-                // VERIFICAREA ESENȚIALĂ:
                 if (response.ok) {
                     const data = await response.json();
                     console.log("Succes:", data.message);
 
-                    // Salvăm ID-ul utilizatorului în localStorage (opțional, util pentru pagina următoare)
                     if(data.userId) {
                         localStorage.setItem('userId', data.userId);
                     }
 
-                    window.location.href = "pag.html";
+                    window.location.href = "login.html";
                 } else {
                     const errorData = await response.json();
                     alert("Eroare: " + (errorData.message || "A apărut o problemă!"));
@@ -48,6 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error("Eroare server:", error);
                 alert("Serverul nu răspunde. Verifică dacă backend-ul este pornit.");
             }
-        }); // Închide submit listener
-    } // Închide if(form)
-}); // Închide DOMContentLoaded
+        });
+    }
+});
