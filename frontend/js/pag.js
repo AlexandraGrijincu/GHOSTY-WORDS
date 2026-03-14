@@ -1,4 +1,3 @@
-// Preluăm progresul utilizatorului
 let nivelDeDeblocat = parseInt(localStorage.getItem('userProgress')) || 1;
 
 function updateMap() {
