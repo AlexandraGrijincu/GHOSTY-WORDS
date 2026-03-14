@@ -70,7 +70,7 @@ function joc() {
 
 async function pierdeViata() {
     if (pauzaFantoma) return;
-    pauzaFantoma = true;
+    pauzaFantoma = true; // Îngheață mișcarea în funcția joc()
 
 
     const fantomaImg = document.getElementById('fantoma');
@@ -78,10 +78,10 @@ async function pierdeViata() {
         fantomaImg.classList.add('fantoma-inghetata-verde');
     }
     personajElem.classList.add("stare-speciala-rosie");
-    await asteaptaMs(400);
+    await asteaptaMs(400); // Momentul impactului/atacului
     personajElem.classList.remove("stare-speciala-rosie");
 
-   
+    // Actualizează inima (logica ta existentă)
     const inima = document.getElementById(`inima-${vieti}`);
     if (inima) {
         inima.classList.remove('plina');
@@ -90,7 +90,7 @@ async function pierdeViata() {
 
     vieti--;
 
-    
+    // Așteaptă 1 secundă pentru ca jucătorul să vadă greșeala
     await asteaptaMs(200);
 
     if (fantomaImg) {
@@ -105,7 +105,7 @@ async function pierdeViata() {
     }
     else {
         verbenr++;
-        spawnFantoma();
+        spawnFantoma(); // Aceasta va reseta poziția X și Y
         requestAnimationFrame(joc);
     }
 }
@@ -137,8 +137,9 @@ function seteazaIdlePersonaj() {
 async function pornesteAnimatiePersonaj() {
     if (esteInAnimatiePersonaj) return;
     esteInAnimatiePersonaj = true;
-    pauzaFantoma = true;
+    pauzaFantoma = true; // Înghețăm fantoma pe ecran la succes
 
+    // Secvența de cadre înainte
     for (let i = 1; i < imaginiAnimatie.length; i++) {
         await asteaptaMs(100);
         personajElem.style.backgroundImage = `url('${imaginiAnimatie[i]}')`;
@@ -156,7 +157,8 @@ async function pornesteAnimatiePersonaj() {
     seteazaIdlePersonaj();
     esteInAnimatiePersonaj = false;
     pauzaFantoma = false;
-    if (gameActive && verbenr<11) {
+
+    if (gameActive && verbenr<10) {
         verbenr++;
         spawnFantoma();
     }
@@ -185,7 +187,7 @@ input.addEventListener('input', async () => {
         scor += 10;
         scorAfisat.innerText = "Scor: " + scor;
 
-        if (verbenr >=11 || scor>=100) {
+        if (verbenr >=11 ) {
             terminaJocul(true);
         } else {
             vitezaCurenta += 0.1;
@@ -203,7 +205,6 @@ async function salveazaScorul(scorFinal) {
     } catch (e) { console.error("Eroare salvare scor"); }
 }
 
-// --- ANIMATIE VRĂJITOARE ---
 const imaginiVrajitoare = ["../imagini/vrajitoare/v1.png", "../imagini/vrajitoare/v2.png", "../imagini/vrajitoare/v3.png"];
 let frameVrajitoare = 0;
 
@@ -211,18 +212,15 @@ setInterval(() => {
     frameVrajitoare = (frameVrajitoare + 1) % imaginiVrajitoare.length;
     const vImg = document.getElementById('vrajitoare');
     if (vImg) vImg.src = imaginiVrajitoare[frameVrajitoare];
-}, 100); // Am pus 150ms pentru o mișcare mai naturală
+}, 100);
 
 const butonIesire = document.getElementById('iesire');
 
-// Adăugăm evenimentul de click
 butonIesire.addEventListener('click', () => {
-    // Înlocuiește "selectie_nivele.html" cu numele paginii tale principale
     const destinatie = butonIesire.getAttribute('href'); 
     window.location.href = destinatie;
 });
 
-// Adăugăm și un mic efect de hover din cod (opțional, dacă vrei să se simtă interactiv)
 butonIesire.style.cursor = "pointer";
 
 async function terminaJocul(aCastigat) {
@@ -234,16 +232,10 @@ async function terminaJocul(aCastigat) {
         titluFinal.innerText = "Felicitări! Ai Câștigat!";
         titluFinal.style.color = "#4caf50";
         btnNext.classList.remove('ascuns');
-
-        // Preluăm nivelul actual din URL (ex: ?id=1)
         const params = new URLSearchParams(window.location.search);
         let nivelCurent = parseInt(params.get('id')) || 1;
         let urmatorulNivel = nivelCurent + 1;
-
-        // Trimitem progresul la server
         await actualizeazaProgresServer(urmatorulNivel);
-        
-        // Actualizăm și local pentru o încărcare instantanee a hărții ulterior
         localStorage.setItem('userProgress', urmatorulNivel);
     } else {
         titluFinal.innerText = "Ai pierdut!";
@@ -253,9 +245,8 @@ async function terminaJocul(aCastigat) {
     await salveazaScorul(scor);
 }
 
-// Funcția care face legătura cu Backend-ul pentru progres
 async function actualizeazaProgresServer(nouNivel) {
-    const userId = localStorage.getItem('userId'); // Asigură-te că salvezi userId la login!
+    const userId = localStorage.getItem('userId');
     if (!userId) return;
 
     try {
@@ -273,8 +264,6 @@ async function actualizeazaProgresServer(nouNivel) {
     }
 }
 
-
-// --- START ---
 seteazaIdlePersonaj();
 spawnFantoma();
 requestAnimationFrame(joc);
