@@ -1,23 +1,21 @@
-const verbe = [
-    { ro: "Eu am mers", en: "I went" },
-    { ro: "Ea a mâncat", en: "she ate" },
-    { ro: "Noi am băut", en: "we drank" },
-    { ro: "Tu ai dormit", en: "you slept" },
-    { ro: "Ei au văzut", en: "they saw" },
-    { ro: "Voi ați vorbit", en: "you spoke" },
-    { ro: "Eu am scris", en: "I wrote" },
-    { ro: "Ea a citit", en: "she read" },
-    { ro: "Noi am alergat", en: "we ran" },
-    { ro: "Tu ai făcut", en: "you did" },
-    { ro: "El a venit", en: "he came" },
-    { ro: "Ele au cântat", en: "they sang" },
-    { ro: "Eu am lucrat", en: "I worked" },
-    { ro: "Voi ați sărit", en: "you jumped" },
-    { ro: "Ei au auzit", en: "they heard" }
+const verbeNivel3 = [
+    { ro: "Eu mergeam", en: "I was going" },
+    { ro: "Ea mânca", en: "she was eating" },
+    { ro: "Noi beam", en: "we were drinking" },
+    { ro: "Tu dormeai", en: "you were sleeping" },
+    { ro: "Ei vedeau", en: "they were seeing" },
+    { ro: "Voi vorbeați", en: "you were speaking" },
+    { ro: "Eu scriam", en: "I was writing" },
+    { ro: "Ea citea", en: "she was reading" },
+    { ro: "Noi alergam", en: "we were running" },
+    { ro: "Tu făceai", en: "you were doing" },
+    { ro: "El venea", en: "he was coming" },
+    { ro: "Ele cântau", en: "they were singing" },
+    { ro: "Eu lucram", en: "I was working" },
+    { ro: "Voi săreați", en: "you were jumping" },
+    { ro: "Ei auzeau", en: "they were hearing" }
 ];
 
-
-// --- VARIABILE STARE ---
 let vieti = 3;
 let scor = 0;
 let verbenr = 1;
@@ -28,9 +26,9 @@ let pozitieY = -200;
 let verbCurent = {};
 let gameActive = true;
 let esteInAnimatiePersonaj = false;
-let pauzaFantoma = false; // Variabilă pentru a îngheța fantoma în timpul animației
+let pauzaFantoma = false; 
 
-// --- ELEMENTE DOM ---
+
 const ghostCont = document.getElementById('container-fantoma');
 const input = document.getElementById('raspuns-utilizator');
 const bubble = document.getElementById('bubble-cuvant');
@@ -43,7 +41,7 @@ const personajElem = document.getElementById("personaj");
 
 const imaginiAnimatie = ["../images/idel.png", "../images/001.png", "../images/002.png", "../images/003.png"];
 
-// --- LOGICA JOCULUI ---
+
 
 function spawnFantoma() {
     if (!gameActive) return;
@@ -58,7 +56,6 @@ function spawnFantoma() {
 function joc() {
     if (!gameActive) return;
 
-    // Dacă fantoma este în pauză (pentru animație), doar cerem următorul frame fără să mișcăm poziția
     if (pauzaFantoma) {
         requestAnimationFrame(joc);
         return;
@@ -78,7 +75,7 @@ function joc() {
 
 async function pierdeViata() {
     if (pauzaFantoma) return;
-    pauzaFantoma = true; // Îngheață mișcarea în funcția joc()
+    pauzaFantoma = true;
 
 
     const fantomaImg = document.getElementById('fantoma');
@@ -86,10 +83,10 @@ async function pierdeViata() {
         fantomaImg.classList.add('fantoma-inghetata-verde');
     }
     personajElem.classList.add("stare-speciala-rosie");
-    await asteaptaMs(400); // Momentul impactului/atacului
+    await asteaptaMs(400);
     personajElem.classList.remove("stare-speciala-rosie");
 
-    // Actualizează inima (logica ta existentă)
+   
     const inima = document.getElementById(`inima-${vieti}`);
     if (inima) {
         inima.classList.remove('plina');
@@ -98,7 +95,7 @@ async function pierdeViata() {
 
     vieti--;
 
-    // Așteaptă 1 secundă pentru ca jucătorul să vadă greșeala
+    
     await asteaptaMs(200);
 
     if (fantomaImg) {
@@ -113,7 +110,7 @@ async function pierdeViata() {
     }
     else {
         verbenr++;
-        spawnFantoma(); // Aceasta va reseta poziția X și Y
+        spawnFantoma();
         requestAnimationFrame(joc);
     }
 }
@@ -134,7 +131,6 @@ async function terminaJocul(aCastigat) {
     await salveazaScorul(scor);
 }
 
-// --- ANIMATIE PERSONAJ (MODIFICATĂ) ---
 
 const asteaptaMs = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -145,19 +141,17 @@ function seteazaIdlePersonaj() {
 async function pornesteAnimatiePersonaj() {
     if (esteInAnimatiePersonaj) return;
     esteInAnimatiePersonaj = true;
-    pauzaFantoma = true; // Înghețăm fantoma pe ecran la succes
+    pauzaFantoma = true;
 
-    // Secvența de cadre înainte
     for (let i = 1; i < imaginiAnimatie.length; i++) {
         await asteaptaMs(100);
         personajElem.style.backgroundImage = `url('${imaginiAnimatie[i]}')`;
     }
 
     personajElem.classList.add("stare-speciala");
-    await asteaptaMs(500); // Momentul impactului/atacului
+    await asteaptaMs(500);
     personajElem.classList.remove("stare-speciala");
 
-    // Secvența de cadre înapoi
     for (let i = imaginiAnimatie.length - 2; i >= 0; i--) {
         await asteaptaMs(100);
         personajElem.style.backgroundImage = `url('${imaginiAnimatie[i]}')`;
@@ -165,16 +159,13 @@ async function pornesteAnimatiePersonaj() {
 
     seteazaIdlePersonaj();
     esteInAnimatiePersonaj = false;
-    pauzaFantoma = false; // Dezghețăm logica de mișcare
-
-    // Abia acum spawnăm fantoma nouă (fantoma veche dispare/se resetează)
-    if (gameActive && verbenr<10) {
+    pauzaFantoma = false;
+    if (gameActive && verbenr<11) {
         verbenr++;
         spawnFantoma();
     }
 }
 
-// --- INPUT & SCORE ---
 
 input.addEventListener('input', async () => {
     if (!gameActive || pauzaFantoma) return;
@@ -198,11 +189,10 @@ input.addEventListener('input', async () => {
         scor += 10;
         scorAfisat.innerText = "Scor: " + scor;
 
-        if (verbenr >=11 ) {
+        if (verbenr >=11 || scor>=100) {
             terminaJocul(true);
         } else {
             vitezaCurenta += 0.1;
-            // spawnFantoma() se apelează automat la finalul funcției pornesteAnimatiePersonaj()
         }
     }
 });
@@ -217,7 +207,7 @@ async function salveazaScorul(scorFinal) {
     } catch (e) { console.error("Eroare salvare scor"); }
 }
 
-// --- ANIMATIE VRĂJITOARE ---
+
 const imaginiVrajitoare = ["../imagini/vrajitoare/v1.png", "../imagini/vrajitoare/v2.png", "../imagini/vrajitoare/v3.png"];
 let frameVrajitoare = 0;
 
@@ -225,18 +215,17 @@ setInterval(() => {
     frameVrajitoare = (frameVrajitoare + 1) % imaginiVrajitoare.length;
     const vImg = document.getElementById('vrajitoare');
     if (vImg) vImg.src = imaginiVrajitoare[frameVrajitoare];
-}, 100); // Am pus 150ms pentru o mișcare mai naturală
+}, 100); 
 
 const butonIesire = document.getElementById('iesire');
 
-// Adăugăm evenimentul de click
+
 butonIesire.addEventListener('click', () => {
-    // Înlocuiește "selectie_nivele.html" cu numele paginii tale principale
     const destinatie = butonIesire.getAttribute('href'); 
     window.location.href = destinatie;
 });
 
-// Adăugăm și un mic efect de hover din cod (opțional, dacă vrei să se simtă interactiv)
+
 butonIesire.style.cursor = "pointer";
 
 async function terminaJocul(aCastigat) {
@@ -249,15 +238,13 @@ async function terminaJocul(aCastigat) {
         titluFinal.style.color = "#4caf50";
         btnNext.classList.remove('ascuns');
 
-        // Preluăm nivelul actual din URL (ex: ?id=1)
+        
         const params = new URLSearchParams(window.location.search);
         let nivelCurent = parseInt(params.get('id')) || 1;
         let urmatorulNivel = nivelCurent + 1;
 
-        // Trimitem progresul la server
         await actualizeazaProgresServer(urmatorulNivel);
         
-        // Actualizăm și local pentru o încărcare instantanee a hărții ulterior
         localStorage.setItem('userProgress', urmatorulNivel);
     } else {
         titluFinal.innerText = "Ai pierdut!";
@@ -267,9 +254,8 @@ async function terminaJocul(aCastigat) {
     await salveazaScorul(scor);
 }
 
-// Funcția care face legătura cu Backend-ul pentru progres
 async function actualizeazaProgresServer(nouNivel) {
-    const userId = localStorage.getItem('userId'); // Asigură-te că salvezi userId la login!
+    const userId = localStorage.getItem('userId'); 
     if (!userId) return;
 
     try {
@@ -288,7 +274,6 @@ async function actualizeazaProgresServer(nouNivel) {
 }
 
 
-// --- START ---
 seteazaIdlePersonaj();
 spawnFantoma();
 requestAnimationFrame(joc);
