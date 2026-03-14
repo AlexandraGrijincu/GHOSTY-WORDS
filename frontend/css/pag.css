@@ -1,0 +1,103 @@
+:root {
+    --electric-blue: #008cff;
+    --electric-blue-dark: #00569d;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: #0d041a;
+    font-family: 'Segoe UI', sans-serif;
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* HARTA */
+.map-wrapper {
+    position: relative;
+
+    width: min(100vw, 2972px);
+    height: auto;
+
+    aspect-ratio: 2972 / 1408;
+}
+
+/* IMAGINE */
+.map-image {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* NODURI */
+.nodes-container {
+    position: absolute;
+    inset: 0;
+}
+
+.level-node {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 70px;
+    height: 70px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.node-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 22px;
+    font-weight: bold;
+    color: rgba(255,255,255,0.7);
+}
+
+/* STARI */
+.current .node-inner {
+    color: #fff;
+    text-shadow: 0 0 15px var(--electric-blue);
+}
+
+.locked .node-inner {
+    color: rgba(0,0,0,0.5);
+    cursor: not-allowed;
+}
+
+/* START */
+.start-bubble {
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    background: white;
+    color: var(--electric-blue-dark);
+    padding: 4px 10px;
+
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 900;
+
+    border: 1px solid var(--electric-blue);
+    white-space: nowrap;
+
+    animation: float 2s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%,100% { transform: translate(-50%,0); }
+    50% { transform: translate(-50%,-5px); }
+}
+
+.header-magic {
+    display: none;
+}

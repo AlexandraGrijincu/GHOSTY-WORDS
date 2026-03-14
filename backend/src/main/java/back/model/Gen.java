@@ -12,9 +12,14 @@ public class Gen {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+<<<<<<< HEAD
+    
+    private int id_word;
+=======
     @ManyToOne
     @JoinColumn(name = "id_word", referencedColumnName = "id")
     private Word word;
+>>>>>>> 7b7272459c017c09a31dbd62bffd05e23a54d69a
     private String paststimple;
 
     public int getId(){return id;}
