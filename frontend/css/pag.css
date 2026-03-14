@@ -169,3 +169,26 @@ html, body {
 .header-magic {
     display: none;
 }
+
+#deconectare {
+    position: fixed;
+    bottom: 650px;
+    right: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    background: rgba(0, 0, 0, 0.4); /* Un fundal semi-transparent */
+    padding: 10px 10px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#deconectare {
+    background: rgba(132, 22, 149, 0.6); /* Un roșu mai intens pentru logout */
+}
+
+#deconectare:hover {
+    background: rgba(200, 0, 255, 0.9);
+    transform: scale(1.05);
+}
