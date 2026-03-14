@@ -35,7 +35,7 @@ function updateMap() {
       btnScris.innerText = 'WRITE';
       btnScris.onclick = (e) => {
         e.stopPropagation();
-        window.location.href = `../html/nivel1.html?id=${level}`;
+        window.location.href = `../html/nivel${level}.html?id=${level}`;
       };
 
       const btnAudio = document.createElement('div');
@@ -43,7 +43,7 @@ function updateMap() {
       btnAudio.innerText = 'SPEAK';
       btnAudio.onclick = (e) => {
         e.stopPropagation();
-        window.location.href = `nivel_audio.html?id=${level}`;
+        window.location.href = `niv${level}_vocal.html?id=${level}`;
       };
 
       const toggleMenu = (e) => {
@@ -119,3 +119,4 @@ async function incarcaHarta() {
 
   updateMap(nivelDeDeblocat);
 }
+
