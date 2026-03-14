@@ -10,11 +10,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* Gradientul de fundal din imaginea ta */
     background: linear-gradient(135deg, #c7a1c4 0%, #a885a5 50%, #2b1d31 100%);
 }
 
-/* Butonul înapoi (stânga sus) */
 .back-button {
     position: absolute;
     top: 40px;
@@ -31,17 +29,15 @@ body {
     font-size: 1.5rem;
 }
 
-/* Cardul principal */
 .main-card {
-   background: rgba(255, 255, 255, 0.1) !important; 
+    background: rgba(255, 255, 255, 0.1) !important;
     backdrop-filter: blur(25px) !important;
-    -webkit-backdrop-filter: blur(25px); 
-    
-    /* Dimensiuni și rotunjire */
-    width: 450px !important; 
-    min-height: 550px !important; 
-    border-radius: 50px !important; /* ACEASTA ESTE LINIA CHEIE */
-    
+    -webkit-backdrop-filter: blur(25px);
+
+    width: 450px !important;
+    min-height: 550px !important;
+    border-radius: 50px !important;
+
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -51,8 +47,8 @@ body {
 }
 
 .form-container {
-  flex: 1 !important; 
-    padding: 30px 40px; /* Padding uniform pentru ambele formulare */
+    flex: 1 !important;
+    padding: 30px 40px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -61,7 +57,7 @@ body {
 }
 
 h2 {
-    color: #232338 !important; 
+    color: #232338 !important;
     margin-bottom: 40px;
     font-size: 2.2rem;
     font-weight: 800;
@@ -87,19 +83,20 @@ form {
     outline: none;
     flex: 1;
     font-size: 1rem;
-    color:#fff !important;;
+    color: #fff !important;
+    ;
 }
 
 .input-field input::placeholder {
-   color: rgba(255, 255, 255, 0.7) !important;
+    color: rgba(255, 255, 255, 0.7) !important;
 }
 
 .input-field i {
-    color:#fff !important;;
+    color: #fff !important;
+    ;
     font-size: 1.1rem;
 }
 
-/* Butonul Sign Up */
 .signup-btn {
     width: 100%;
     padding: 12px;
@@ -110,7 +107,7 @@ form {
     font-size: 1.1rem;
     cursor: pointer;
     margin-top: 20px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .footer-text {
@@ -120,7 +117,6 @@ form {
     cursor: pointer;
 }
 
-/* Dreapta: Containerul pentru imagine */
 .image-container {
     display: none !important;
 }
@@ -128,68 +124,66 @@ form {
 .illustration {
     width: 90%;
     height: 90%;
-    /* Când ai poza cu cactus, o pui aici */
     background: url('../images/poza7.png') no-repeat center center/contain;
-    /* Momentan punem un placeholder colorat să vezi zona */
-    background-color: #1a1a2e; 
+    background-color: #1a1a2e;
     border-radius: 30px;
 }
 
 .fundal {
-            background-image: url("../images/poza_fundal.png");
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
-            height: 100vh; 
-            width: 100%;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    background-image: url("../images/poza_fundal.png");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    height: 100vh;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-  body{
-            margin: 0;
-        }
+body {
+    margin: 0;
+}
 
-        .buton_start{
+.buton_start {
 
-            background: none;
-            border: none;
-            padding: 0;
-            cursor: pointer;
-            margin-top:450px;
-            margin-left:100px;
-        }
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    margin-top: 450px;
+    margin-left: 100px;
+}
 
-        .buton_start img{
-            width: 400px;
-            transition: transform 0.2s;
-        }
+.buton_start img {
+    width: 400px;
+    transition: transform 0.2s;
+}
 
-        .buton_start img:hover{
-            transform: scale(1.1);
-        }
+.buton_start img:hover {
+    transform: scale(1.1);
+}
 
 .fundal_nivel {
-            background-image: url("../images/poza_fundal_nivel.png");
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
-            height: 100vh; 
-            width: 100%;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    background-image: url("../images/poza_fundal_nivel.png");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    height: 100vh;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 
-.container-viata{
-    position:fixed;
-    gap:10px;
+.container-viata {
+    position: fixed;
+    gap: 10px;
     flex-direction: row;
     top: 20px;
     left: 20px;
@@ -197,7 +191,7 @@ form {
     z-index: 100;
 }
 
-.inima{
+.inima {
     width: 80px;
     height: 80px;
     background-size: contain;
@@ -205,45 +199,143 @@ form {
     transition: transform 0.3s ease;
 }
 
-.inima.plina{
+.inima.plina {
     background-image: url("../images/poza_inima.png");
 }
 
-.inima.lovita{
+.inima.lovita {
     background-image: url("../images/poza_inima2.png");
     transform: scale(0.8);
     filter: grayscale(100%);
 }
-.idel {
-    background-image: url("../images/idel.png");
-}
-#game-container {
+
+.fundal_nivel {
     position: relative;
-    width: 100%;
+    width: 100vw;
     height: 100vh;
+    background: url('../images/poza_fundal_nivel.png') no-repeat center center;
+    background-size: cover;
     overflow: hidden;
 }
-#personaj {
-    position: fixed;
-    bottom: 30px;
-    left: 300px;
-    width: 500px;
-    height: 500px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    z-index: 10;
-    background-image: url("../images/idle.png"); 
+
+#vrajitoare {
+    position: absolute;
+    bottom: 10%;
+    left: 5%;
+    width: 150px;
 }
-.stare-speciala {
-            transform: scale(1.1);
-            filter: drop-shadow(0 0 15px rgb(6, 252, 39));
-            transition: 0.3s;
-        }
-.fundal_nivel {
+
+#container-fantoma {
+    position: absolute;
+    right: -250px;
+    top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: none !important;
+}
+
+.inima.lovita {
+    background-image: url("../images/poza_inima2.png") !important;
+    transform: scale(0.9);
+    filter: brightness(0.6);
+}
+
+#bubble-cuvant {
+    background: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: 2px solid #555;
+    font-weight: bold;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+#bubble-cuvant::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    border-width: 10px 10px 0;
+    border-style: solid;
+    border-color: white transparent;
+}
+
+.zona-input {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#raspuns-utilizator {
+    padding: 10px 20px;
+    font-size: 20px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+#ecran-final {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.continut-final {
+    background: #232338;
+    padding: 40px;
+    border-radius: 30px;
+    text-align: center;
+    color: white;
+    border: 2px solid #c7a1c4;
+}
+
+.ascuns {
+    display: none !important;
+}
+
+.butoane-final button {
+    padding: 10px 25px;
+    margin: 10px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 50px;
+    border: none;
+}
+
+#btn-restart {
+    background: #ff4d4d;
+    color: white;
+}
+
+#btn-next {
+    background: #4caf50;
+    color: white;
+}
+
+#personaj {
+    position: fixed;
+    bottom: 15px;
+    left: 290px;
+    width: 500px;
+    height: 500px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 10;
+    background-image: url("../images/idle.png");
+}
+
+.stare-speciala {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 15px rgb(6, 252, 39));
+    transition: 0.3s;
 }
