@@ -230,6 +230,56 @@ butonIesire.addEventListener('click', () => {
 
 // Adăugăm și un mic efect de hover din cod (opțional, dacă vrei să se simtă interactiv)
 butonIesire.style.cursor = "pointer";
+
+async function terminaJocul(aCastigat) {
+    gameActive = false;
+    ecranFinal.classList.remove('ascuns');
+    scorTextFinal.innerText = "Scor final: " + scor;
+
+    if (aCastigat) {
+        titluFinal.innerText = "Felicitări! Ai Câștigat!";
+        titluFinal.style.color = "#4caf50";
+        btnNext.classList.remove('ascuns');
+
+        // Preluăm nivelul actual din URL (ex: ?id=1)
+        const params = new URLSearchParams(window.location.search);
+        let nivelCurent = parseInt(params.get('id')) || 1;
+        let urmatorulNivel = nivelCurent + 1;
+
+        // Trimitem progresul la server
+        await actualizeazaProgresServer(urmatorulNivel);
+        
+        // Actualizăm și local pentru o încărcare instantanee a hărții ulterior
+        localStorage.setItem('userProgress', urmatorulNivel);
+    } else {
+        titluFinal.innerText = "Ai pierdut!";
+        titluFinal.style.color = "#ff4d4d";
+        btnNext.classList.add('ascuns');
+    }
+    await salveazaScorul(scor);
+}
+
+// Funcția care face legătura cu Backend-ul pentru progres
+async function actualizeazaProgresServer(nouNivel) {
+    const userId = localStorage.getItem('userId'); // Asigură-te că salvezi userId la login!
+    if (!userId) return;
+
+    try {
+        await fetch('/api/user/update-progress', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: userId,
+                newLevel: nouNivel
+            })
+        });
+        console.log("Progres salvat pe server!");
+    } catch (error) {
+        console.error("Eroare la salvarea progresului:", error);
+    }
+}
+
+
 // --- START ---
 seteazaIdlePersonaj();
 spawnFantoma();

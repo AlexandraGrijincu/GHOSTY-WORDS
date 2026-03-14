@@ -2,43 +2,42 @@
 let nivelDeDeblocat = parseInt(localStorage.getItem('userProgress')) || 1;
 
 function updateMap() {
-    const nodes = document.querySelectorAll('.level-node');
+  const nodes = document.querySelectorAll('.level-node');
 
-    nodes.forEach(node => {
-        const level = parseInt(node.getAttribute('data-level'));
-        
-        // 1. Curățăm orice meniu existent pentru a evita duplicarea butoanelor
-        const oldContainer = node.querySelector('.level-menu-container');
-        if (oldContainer) oldContainer.remove();
+  nodes.forEach(node => {
+    const level = parseInt(node.getAttribute('data-level'));
+    const oldContainer = node.querySelector('.level-menu-container');
+    if (oldContainer) oldContainer.remove();
 
-        // 2. Gestionăm starea nodurilor (Completed / Current / Locked)
-        if (level < nivelDeDeblocat) {
-            node.classList.add('completed');
-            node.classList.remove('current', 'locked');
-            node.onclick = null; // Opțional: click-ul pe nivele terminate poate fi dezactivat sau să te trimită undeva
-        }
-        else if (level === nivelDeDeblocat) {
-            node.classList.add('current');
-            node.classList.remove('completed', 'locked');
+    // --- LOGICA MODIFICATĂ ---
+    if (level <= nivelDeDeblocat) { 
+      // Dacă nivelul este terminat SAU este cel curent
+      if (level < nivelDeDeblocat) {
+        node.classList.add('completed');
+        node.classList.remove('current', 'locked');
+      } else {
+        node.classList.add('current');
+        node.classList.remove('completed', 'locked');
+      }
 
-            // Creăm containerul principal pentru meniul interactiv
-            const container = document.createElement('div');
-            container.className = 'level-menu-container';
+      // Adăugăm meniul (WRITE / SPEAK) pentru ambele stări
+      const container = document.createElement('div');
+      container.className = 'level-menu-container';
 
-            // Eticheta START (deasupra globului)
-            const startLabel = document.createElement('div');
-            startLabel.className = 'start-bubble';
-            startLabel.innerText = 'START';
+      const startLabel = document.createElement('div');
+      startLabel.className = 'start-bubble';
+      if(level == nivelDeDeblocat )
+        nivelDeDeblocat = "START";
 
-            // Butonul WRITE (te duce la nivel.html)
-            const btnScris = document.createElement('div');
-            btnScris.className = 'sub-node scris';
-            btnScris.innerText = 'WRITE';
-            btnScris.onclick = (e) => { 
-                e.stopPropagation(); 
-                window.location.href = `../html/nivel1.html?id=${level}`; 
-            };
+      const btnScris = document.createElement('div');
+      btnScris.className = 'sub-node scris';
+      btnScris.innerText = 'WRITE';
+      btnScris.onclick = (e) => {
+        e.stopPropagation();
+        window.location.href = `../html/nivel1.html?id=${level}`;
+      };
 
+<<<<<<< HEAD
             // Butonul SPEAK (te duce la nivel_audio.html)
             const btnAudio = document.createElement('div');
             btnAudio.className = 'sub-node audio';
@@ -47,45 +46,85 @@ function updateMap() {
                 e.stopPropagation(); 
                 window.location.href = `../html/niv1_vocal.html?id=${level}`; 
             };
+=======
+      const btnAudio = document.createElement('div');
+      btnAudio.className = 'sub-node audio';
+      btnAudio.innerText = 'SPEAK';
+      btnAudio.onclick = (e) => {
+        e.stopPropagation();
+        window.location.href = `nivel_audio.html?id=${level}`;
+      };
+>>>>>>> ce9309a333bfc555b3eb25584718d3b6d8ccfc32
 
-            // Funcția de deschidere/închidere meniu (Toggle)
-            const toggleMenu = (e) => {
-                e.stopPropagation();
-                // Închidem alte meniuri deschise dacă ar exista (pentru siguranță)
-                document.querySelectorAll('.level-menu-container').forEach(c => {
-                    if (c !== container) c.classList.remove('active');
-                });
-                container.classList.toggle('active');
-            };
+      const toggleMenu = (e) => {
+        e.stopPropagation();
+        document.querySelectorAll('.level-menu-container').forEach(c => {
+          if (c !== container) c.classList.remove('active');
+        });
+        container.classList.toggle('active');
+      };
 
-            // Atribuim evenimentul de click atât etichetei START cât și globului
-            startLabel.onclick = toggleMenu;
-            node.onclick = toggleMenu;
+      startLabel.onclick = toggleMenu;
+      node.onclick = toggleMenu;
 
-            // Asamblăm elementele în pagină
-            container.appendChild(startLabel);
-            container.appendChild(btnScris);
-            container.appendChild(btnAudio);
-            node.appendChild(container);
-        }
-        else {
-            // Nivelul este blocat
-            node.classList.add('locked');
-            node.classList.remove('completed', 'current');
-            node.onclick = () => {
-                console.log("Nivel blocat! Trebuie să termini nivelele anterioare.");
-                // Aici poți adăuga un efect de tremur (shake) în CSS clasei .locked
-            };
-        }
-    });
+      container.appendChild(startLabel);
+      container.appendChild(btnScris);
+      container.appendChild(btnAudio);
+      node.appendChild(container);
+
+    } else {
+      // Nivelul rămâne blocat
+      node.classList.add('locked');
+      node.classList.remove('completed', 'current');
+      node.onclick = () => { console.log("Nivel blocat!"); };
+    }
+  });
 }
 
 // Închide meniul dacă utilizatorul dă click oriunde altundeva pe hartă
 document.addEventListener('click', () => {
-    document.querySelectorAll('.level-menu-container').forEach(container => {
-        container.classList.remove('active');
-    });
+  document.querySelectorAll('.level-menu-container').forEach(container => {
+    container.classList.remove('active');
+  });
 });
 
 // Inițializăm harta la încărcarea paginii
 document.addEventListener('DOMContentLoaded', updateMap);
+
+const butonDeconectare = document.getElementById('deconectare');
+
+if (butonDeconectare) {
+  butonDeconectare.addEventListener('click', () => {
+    // 1. Ștergem datele de sesiune (localStorage sau sessionStorage)
+    localStorage.clear();
+    sessionStorage.clear();
+
+    // 2. Luăm link-ul din atributul href al div-ului
+    const paginaLogin = butonDeconectare.getAttribute('href');
+
+    // 3. Trimitem utilizatorul la pagina de login
+    window.location.href = paginaLogin;
+  });
+}
+
+// Înlocuiește partea de sus a fișierului pag.js
+async function incarcaHarta() {
+    const userId = localStorage.getItem('userId');
+    let nivelDeDeblocat = 1;
+
+    if (userId) {
+        try {
+            // Cerem nivelul de la baza de date
+            const response = await fetch(`/api/user/progress/${userId}`);
+            const data = await response.json();
+            nivelDeDeblocat = data.currentLevel;
+            // Sincronizăm localstorage
+            localStorage.setItem('userProgress', nivelDeDeblocat);
+        } catch (e) {
+            console.log("Server inaccesibil, folosim date locale.");
+            nivelDeDeblocat = parseInt(localStorage.getItem('userProgress')) || 1;
+        }
+    }
+
+    updateMap(nivelDeDeblocat);
+}
