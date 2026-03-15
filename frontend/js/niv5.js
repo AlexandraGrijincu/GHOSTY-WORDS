@@ -109,12 +109,12 @@ const butonIesire = document.getElementById('iesire');
 
 // Adăugăm evenimentul de click
 butonIesire.addEventListener('click', () => {
-    // Înlocuiește "selectie_nivele.html" cu numele paginii tale principale
+    
     const destinatie = butonIesire.getAttribute('href'); 
     window.location.href = destinatie;
 });
 
-// Adăugăm și un mic efect de hover din cod (opțional, dacă vrei să se simtă interactiv)
+
 butonIesire.style.cursor = "pointer";
 
 async function pornesteAnimatieVrajitoare(esteCorect) {
@@ -168,12 +168,12 @@ async function actualizeazaProgresServer(nouNivel) {
     if (!userId) return;
 
     try {
-        await fetch('http://localhost:8080/api/user/update-progress', { // Adaugă URL-ul complet dacă e cazul
+        await fetch('http://localhost:8080/api/user/update-progress', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                userId: parseInt(userId), // Trimite-l ca număr
-                level: nouNivel // Numele trebuie să fie "level" ca în Java
+                userId: parseInt(userId), 
+                level: nouNivel 
             })
         });
     } catch (error) {

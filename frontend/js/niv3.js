@@ -63,7 +63,7 @@ async function valideazaRaspuns() {
     const raspunsDat = inputUtilizator.value.toLowerCase().trim();
 
     if (raspunsDat === raspunsCorect) {
-        // --- CAZ: CORECT ---
+        
         scor += 10;
         scorAfisat.innerText = "Scor: " + scor;
         
@@ -79,25 +79,25 @@ async function valideazaRaspuns() {
         avanseazaJocul();
 
     } else {
-        // --- CAZ: GREȘIT ---
+        
         esteInAnimatie = true; 
 
-        // 1. Animație baghetă roșie
+        // Animație baghetă roșie
         await pornesteAnimatieVrajitoare(false);
         
-        // 2. Arătăm răspunsul corect în chenar (fără să trecem încă la următoarea)
+        // Arătăm răspunsul corect în chenar (fără să trecem încă la următoarea)
         const textCuRaspuns = ex.text.replace("....", `[ ${raspunsCorect.toUpperCase()} ]`);
         chenarPropozitie.innerHTML = `<span style="color: #ff4d4d; font-weight: bold;">${textCuRaspuns}</span>`;
         
-        // 3. Scădem viața (fără să oprim jocul aici)
+        // Scădem viața (fără să oprim jocul aici)
         pierdeViata();
 
-        // 4. PAUZĂ: Userul vede răspunsul roșu timp de 2.5 secunde
+        // PAUZĂ: Userul vede răspunsul roșu timp de 2.5 secunde
         await asteaptaMs(2500);
         
         esteInAnimatie = false;
 
-        // 5. Decizia finală: dacă mai are vieți continuă, dacă nu, game over
+        // Dacă mai are vieți continuă, dacă nu, game over
         if (vieti > 0) {
             avanseazaJocul();
         } else {
@@ -143,7 +143,7 @@ function pierdeViata() {
         inima.classList.add('lovita');
     }
     vieti--;
-    // Observă că am șters condiția de terminaJocul de aici!
+    
 }
 async function salveazaScorul(scorFinal) {
     const userId = localStorage.getItem('userId'); // Preluăm ID-ul utilizatorului
@@ -159,7 +159,7 @@ async function salveazaScorul(scorFinal) {
                 level: 3 // Nivelul curent care a fost terminat
             })
         });
-        // Opțional: Actualizăm și local progresul ca să fie instantaneu
+        
         localStorage.setItem('userProgress', 4); 
     } catch (e) { 
         console.error("Eroare la salvarea progresului:", e); 
@@ -170,12 +170,12 @@ async function actualizeazaProgresServer(nouNivel) {
     if (!userId) return;
 
     try {
-        await fetch('http://localhost:8080/api/user/update-progress', { // Adaugă URL-ul complet dacă e cazul
+        await fetch('http://localhost:8080/api/user/update-progress', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                userId: parseInt(userId), // Trimite-l ca număr
-                level: nouNivel // Numele trebuie să fie "level" ca în Java
+                userId: parseInt(userId), 
+                level: nouNivel 
             })
         });
     } catch (error) {
@@ -205,12 +205,12 @@ const butonIesire = document.getElementById('iesire');
 
 // Adăugăm evenimentul de click
 butonIesire.addEventListener('click', () => {
-    // Înlocuiește "selectie_nivele.html" cu numele paginii tale principale
+   
     const destinatie = butonIesire.getAttribute('href'); 
     window.location.href = destinatie;
 });
 
-// Adăugăm și un mic efect de hover din cod (opțional, dacă vrei să se simtă interactiv)
+
 butonIesire.style.cursor = "pointer";
 
 const asteaptaMs = (ms) => new Promise(resolve => setTimeout(resolve, ms));

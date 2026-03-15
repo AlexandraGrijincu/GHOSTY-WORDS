@@ -101,21 +101,6 @@ async function pierdeViata() {
     }
 }
 
-async function terminaJocul(aCastigat) {
-    gameActive = false;
-    ecranFinal.classList.remove('ascuns');
-    scorTextFinal.innerText = "Scor final: " + scor;
-    if (aCastigat) {
-        titluFinal.innerText = "Felicitări! Ai Câștigat!";
-        titluFinal.style.color = "#4caf50";
-        btnNext.classList.remove('ascuns');
-    } else {
-        titluFinal.innerText = "Ai pierdut!";
-        titluFinal.style.color = "#ff4d4d";
-        btnNext.classList.add('ascuns');
-    }
-    await salveazaScorul(scor);
-}
 async function actualizeazaProgresServer(nouNivel) {
     const userId = localStorage.getItem('userId');
     if (!userId) return;
@@ -235,7 +220,6 @@ async function salveazaScorul(scorFinal) {
                 level: 4 
             })
         });
-        // Opțional: Actualizăm și local progresul ca să fie instantaneu
         localStorage.setItem('userProgress', 5); 
     } catch (e) { 
         console.error("Eroare la salvarea progresului:", e); 
@@ -255,7 +239,6 @@ async function terminaJocul(aCastigat) {
         
         const params = new URLSearchParams(window.location.search);
         let nivelCurent = parseInt(params.get('id')) || 1;
-        let urmatorulNivel = nivelCurent + 1;
 
         await actualizeazaProgresServer(urmatorulNivel);
         
@@ -268,24 +251,6 @@ async function terminaJocul(aCastigat) {
     }
 }
 
-async function actualizeazaProgresServer(nouNivel) {
-    const userId = localStorage.getItem('userId'); 
-    if (!userId) return;
-
-    try {
-        await fetch('/api/user/update-progress', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                userId: userId,
-                newLevel: nouNivel
-            })
-        });
-        console.log("Progres salvat pe server!");
-    } catch (error) {
-        console.error("Eroare la salvarea progresului:", error);
-    }
-}
 
 async function incarcaVerbeBD(){
     try{

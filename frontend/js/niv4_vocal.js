@@ -34,7 +34,7 @@ const btnNext = document.getElementById('btn-next');
 const personajElem = document.getElementById("personaj");
 const cuvantDetectatElem = document.getElementById('cuvant-detectat');
 
-// Căile imaginilor - Verifică să fie corecte în folderul tău!
+// Căile imaginilor 
 const imaginiAnimatie = [
     "../images/idel.png", 
     "../images/001.png", 
@@ -94,7 +94,7 @@ async function verificaRaspuns(pronuntie) {
             terminaJocul(true);
         } else {
             vitezaCurenta += 0.15;
-            // spawnFantoma() este apelat automat la finalul animației personajului
+           
         }
     }
 }
@@ -117,12 +117,12 @@ const butonIesire = document.getElementById('iesire');
 
 // Adăugăm evenimentul de click
 butonIesire.addEventListener('click', () => {
-    // Înlocuiește "selectie_nivele.html" cu numele paginii tale principale
+  
     const destinatie = butonIesire.getAttribute('href'); 
     window.location.href = destinatie;
 });
 
-// Adăugăm și un mic efect de hover din cod (opțional, dacă vrei să se simtă interactiv)
+
 butonIesire.style.cursor = "pointer";
 
 function joc() {
@@ -135,14 +135,12 @@ function joc() {
 
     pozitieX += vitezaCurenta;
     // Efect de plutire ușoară pe verticală
-    //pozitieY = 100 + Math.sin(Date.now() / 500) * 20;
-    //pozitieY += vitezaCurenta * 0.5; // Mișcare diagonală
     pozitieY = 200 + Math.sin(Date.now() / 500) * 30;
     
     ghostCont.style.right = pozitieX + "px";
     ghostCont.style.top = pozitieY + "px";
 
-    // Dacă fantoma ajunge la personaj (aprox 60% din lățime)
+    // Dacă fantoma ajunge la personaj 
     if (pozitieX > window.innerWidth * 0.45) {
         pierdeViata();
     } else {
