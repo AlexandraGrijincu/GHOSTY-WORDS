@@ -1,22 +1,14 @@
 // --- DATE JOC ---
 const verbe = [
-    { ro: "Eu am mers", en: "i went" },
-    { ro: "Ea a mâncat", en: "she ate" },
-    { ro: "Noi am băut", en: "we drank" },
-    { ro: "Tu ai dormit", en: "you slept" },
-    { ro: "Ei au văzut", en: "they saw" },
-    { ro: "Voi ați vorbit", en: "you spoke" },
-    { ro: "Eu am scris", en: "i wrote" },
-    { ro: "Ea a citit", en: "she read" },
-    { ro: "Noi am alergat", en: "we ran" },
-    { ro: "Tu ai făcut", en: "you did" },
-    { ro: "El a venit", en: "he came" },
-    { ro: "Ele au cântat", en: "they sang" },
-    { ro: "Eu am lucrat", en: "i worked" },
-    { ro: "Voi ați sărit", en: "you jumped" },
-    { ro: "Ei au auzit", en: "they heard" }
+    { ro: "a merge", en: "to go" }, { ro: "a manca", en: "to eat" },
+    { ro: "a bea", en: "to drink" }, { ro: "a dormi", en: "to sleep" },
+    { ro: "a vedea", en: "to see" }, { ro: "a vorbi", en: "to speak" },
+    { ro: "a scrie", en: "to write" }, { ro: "a citi", en: "to read" },
+    { ro: "a alerga", en: "to run" }, { ro: "a face", en: "to do" },
+    { ro: "a veni", en: "to come" }, { ro: "a canta", en: "to sing" },
+    { ro: "a lucra", en: "to work" }, { ro: "a sari", en: "to jump" },
+    { ro: "a auzi", en: "to hear" }
 ];
-
 
 // --- VARIABILE STARE ---
 let vieti = 3;

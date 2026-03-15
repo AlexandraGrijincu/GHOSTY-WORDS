@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nivel 3 - Present Continuous Challenge</title>
+    <link rel="stylesheet" href="../css/style_static.css">
+</head>
+<body>
+
+    <div class="fundal_nivel">
+        <div class="container-viata">
+            <div id="inima-1" class="inima plina"></div>
+            <div id="inima-2" class="inima plina"></div>
+            <div id="inima-3" class="inima plina"></div>
+        </div>
+
+        <div id="personaj"></div>
+
+        <div id="chenar-central">
+            <div class="continut-chenar">
+                <h2 id="titlu-instructiuni">Completează propozitia:</h2>
+                <p id="propozitie-text">Se încarcă...</p>
+            </div>
+        </div>
+
+        <div id="container-fantoma">
+            <div id="bubble-cuvant">...</div>
+            <img src="../images/fantoma.png" id="fantoma" alt="Fantoma">
+        </div>
+
+        <div class="zona-input">
+            <input type="text" id="raspuns-utilizator" placeholder="Present Continuous.." autocomplete="off">
+        </div>
+
+        <div id="scor">Scor: 0</div>
+        <div id="iesire" onclick="window.location.href='pag.html'">Ieșire</div>
+    </div>
+
+    <div id="ecran-final" class="ascuns">
+        <div class="continut-final">
+            <h1 id="titlu-final">Joc Terminat</h1>
+            <p id="scor-final">Scor: 0</p>
+            <button onclick="location.reload()">Restart</button>
+            <button id="btn-next" class="ascuns" onclick="window.location.href='pag.html'">Nivelul Următor</button>
+            <button onclick="window.location.href='pag.html'">Ieșire</button>
+        </div>
+    </div>
+
+    <script src="../js/niv5.js"></script>
+</body>
+</html>
