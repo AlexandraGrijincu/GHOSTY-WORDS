@@ -259,7 +259,7 @@ async function actualizeazaProgresServer(nouNivel) {
 
 async function incarcaVerbeBD(){
     try{
-        const raspuns=await fetch('http://localhost:8080/api/verbe');
+        const raspuns=await fetch('http://localhost:8080/api');
         const date=await raspuns.json();
 
         console.log("Date primite de la Server",date);

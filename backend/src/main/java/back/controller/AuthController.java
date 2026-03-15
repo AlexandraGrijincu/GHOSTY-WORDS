@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import back.model.Users;
 import back.model.Word;
+import back.model.Gen;
 import back.model.nivel4_word;
+import back.repository.Nivel2_audioRepository;
 import back.repository.Nivel4Repository;
 import back.repository.UserRepository;
 import back.repository.WordRepository;
@@ -141,5 +144,12 @@ public class AuthController {
     @GetMapping("/users/NivScore")
     public List<Users> getNivScoreUsers() {
         return userRepository.findAll();
+    }
+
+    @Autowired
+    private Nivel2_audioRepository nivel2_audio_Repository;
+    @GetMapping("/verbe2_audio")
+    public List<Gen> getVerbeNivel2_audio() {
+        return nivel2_audio_Repository.findAll();
     }
 }

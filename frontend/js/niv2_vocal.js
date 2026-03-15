@@ -1,8 +1,6 @@
-// --- DATE JOC ---
-const nivel2_verbe = [];
+let verbe2_audio = [];
 
 
-// --- VARIABILE STARE ---
 let vieti = 3;
 let scor = 0;
 let vitezaBaza = 1.2;
@@ -15,7 +13,6 @@ let esteInAnimatiePersonaj = false;
 let pauzaFantoma = false; 
 let recognition;
 
-// --- ELEMENTE DOM ---
 const ghostCont = document.getElementById('container-fantoma');
 const bubble = document.getElementById('bubble-cuvant');
 const scorAfisat = document.getElementById('scor');
@@ -26,7 +23,7 @@ const btnNext = document.getElementById('btn-next');
 const personajElem = document.getElementById("personaj");
 const cuvantDetectatElem = document.getElementById('cuvant-detectat');
 
-// Căile imaginilor - Verifică să fie corecte în folderul tău!
+
 const imaginiAnimatie = [
     "../images/idel.png", 
     "../images/001.png", 
@@ -34,7 +31,6 @@ const imaginiAnimatie = [
     "../images/003.png"
 ];
 
-// --- CONFIGURARE RECUNOAȘTERE VOCALĂ ---
 
 function initializareRecunoastereVocala() {
     window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -71,7 +67,6 @@ function initializareRecunoastereVocala() {
 async function verificaRaspuns(pronuntie) {
     if (!gameActive || pauzaFantoma) return;
 
-    // Eliminăm "to " din ambele părți pentru a fi mai permisiv
     let raspunsUtilizator = pronuntie.replace(/^to\s+/, "").trim();
     let raspunsCorect = verbCurent.en.replace(/^to\s+/, "").trim();
 
@@ -86,19 +81,16 @@ async function verificaRaspuns(pronuntie) {
             terminaJocul(true);
         } else {
             vitezaCurenta += 0.15;
-            // spawnFantoma() este apelat automat la finalul animației personajului
         }
     }
 }
 
-// --- LOGICA MISCARE FANTOMA ---
 
 function spawnFantoma() {
-    if (!gameActive) return;
-    verbCurent = verbe[Math.floor(Math.random() * verbe.length)];
+    if (!gameActive || verbe2_audio.length ===0) return;
+    verbCurent = verbe2_audio[Math.floor(Math.random() * verbe2_audio.length)];
     bubble.innerText = verbCurent.ro;
     
-    // Resetăm poziția fantomei
     pozitieX = -200; 
     pozitieY = -100; 
     
@@ -115,15 +107,10 @@ function joc() {
     }
 
     pozitieX += vitezaCurenta;
-    // Efect de plutire ușoară pe verticală
-    //pozitieY = 100 + Math.sin(Date.now() / 500) * 20;
-    //pozitieY += vitezaCurenta * 0.5; // Mișcare diagonală
     pozitieY = 200 + Math.sin(Date.now() / 500) * 30;
     
     ghostCont.style.right = pozitieX + "px";
     ghostCont.style.top = pozitieY + "px";
-
-    // Dacă fantoma ajunge la personaj (aprox 60% din lățime)
     if (pozitieX > window.innerWidth * 0.45) {
         pierdeViata();
     } else {
@@ -143,14 +130,12 @@ async function pierdeViata() {
         terminaJocul(false);
     } else {
         spawnFantoma();
-        // Mică pauză să nu apară instant
+        
         pauzaFantoma = true;
         setTimeout(() => { pauzaFantoma = false; }, 500);
         requestAnimationFrame(joc); 
     }
 }
-
-// --- ANIMATIE PERSONAJ ---
 
 const asteaptaMs = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -163,7 +148,6 @@ async function pornesteAnimatiePersonaj() {
     esteInAnimatiePersonaj = true;
     pauzaFantoma = true; 
 
-    // Cadre de atac
     for (let i = 1; i < imaginiAnimatie.length; i++) {
         personajElem.style.backgroundImage = `url('${imaginiAnimatie[i]}')`;
         await asteaptaMs(100);
@@ -173,7 +157,6 @@ async function pornesteAnimatiePersonaj() {
     await asteaptaMs(400); 
     personajElem.classList.remove("stare-speciala");
 
-    // Revenire la idle
     for (let i = imaginiAnimatie.length - 2; i >= 0; i--) {
         personajElem.style.backgroundImage = `url('${imaginiAnimatie[i]}')`;
         await asteaptaMs(100);
@@ -186,7 +169,6 @@ async function pornesteAnimatiePersonaj() {
     if (gameActive) spawnFantoma(); 
 }
 
-// --- FINAL JOC ---
 
 async function terminaJocul(aCastigat) {
     gameActive = false;
@@ -208,20 +190,36 @@ async function terminaJocul(aCastigat) {
     await salveazaScorul(scor);
 }
 
-async function salveazaScorul(scorFinal) {
+async function incarcaVerbeBD() {
     try {
-        await fetch('/api/battle/save', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId: 1, score: scorFinal, level: 1 })
-        });
-    } catch (e) { console.error("Eroare salvare scor"); }
+        console.log("Se încarcă datele de la /api/verbe2_audio...");
+        const raspuns = await fetch('http://localhost:8080/api/verbe2_audio');
+        const date = await raspuns.json();
+
+        console.log("Date primite din tabelul GEN:", date);
+
+        verbe2_audio = date.map(v => ({
+            ro: v.ro_past_simple || "Lipsă RO",
+            en: v.en_past_simple ? v.en_past_simple.toLowerCase().trim() : ""
+        }));
+
+        if (verbe2_audio.length > 0) {
+            console.log("Date încărcate cu succes! Verbe disponibile:", verbe2_audio.length);
+            spawnFantoma(); 
+        } else {
+            console.error("Atenție: Serverul a trimis o listă goală pentru Nivelul 2!");
+        }
+    } catch (error) {
+        console.error("Eroare critică la fetch:", error);
+    }
 }
 
-// --- INITIALIZARE ---
-window.onload = () => {
+
+window.onload = async () => {
     seteazaIdlePersonaj();
-    spawnFantoma();
+    
+    await incarcaVerbeBD(); 
+    
     initializareRecunoastereVocala();
     requestAnimationFrame(joc);
 };
