@@ -189,7 +189,7 @@ html, body {
 }
 
 #deconectare:hover {
-    background: rgba(200, 0, 255, 0.9);
+    background: rgba(192, 104, 217, 0.9);
     transform: scale(1.05);
 }
 #leaderboard {
@@ -206,10 +206,10 @@ html, body {
     transition: all 0.3s ease;
 }
 #leaderboard{
-    background: rgba(3, 84, 18, 0.6);
+    background: rgba(8, 131, 142, 0.6);
 }
 
 #leaderboard:hover {
-    background: rgba(12, 140, 36, 0.6);
+    background: rgba(86, 202, 196, 0.6);
     transform: scale(1.05);
 }

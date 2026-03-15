@@ -1,96 +1,147 @@
-.fundal_nivel {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
+/* --- RESET GENERAL --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* --- FUNDAL ȘI COMPORTAMENT PAGINĂ --- */
+body {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Împiedică scroll-ul paginii întregi */
+    background: #0d041a; /* Culoare de siguranță în caz că imaginea nu se încarcă */
+}
+
+.fundal_nivel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: url('../images/poza_fundal_nivel.png') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+/* Efect de blur pe fundal (opțional, conform codului tău anterior) */
 .fundal_nivel::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('../images/poza_fundal_nivel.png') no-repeat center center;
-    background-size: cover;
+    inset: 0;
+    background: inherit;
     filter: blur(5px);
     transform: scale(1.1); 
     z-index: -1; 
 }
 
+/* --- CONTAINERUL LEADERBOARD --- */
 .scor {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    
-    width: 450px;
+    position: relative;
+    width: 500px;
     max-height: 85vh;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.1); /* Sticlă transparentă */
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    padding: 20px;
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    padding: 30px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
     color: white;
-    font-family: sans-serif;
+    z-index: 2;
 }
 
 .titlu-leaderboard {
     text-align: center;
-    margin-bottom: 20px;
-    font-size: 24px;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-    padding-bottom: 10px;
+    margin-bottom: 25px;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 15px;
 }
 
+/* --- LISTA ȘI SCROLLBAR --- */
+.lista-scoruri {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+}
 
+/* Personalizare Scrollbar */
+.lista-scoruri::-webkit-scrollbar {
+    width: 6px;
+}
+
+.lista-scoruri::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.lista-scoruri::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+}
+
+.lista-scoruri::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* --- RÂNDURILE DE SCOR --- */
 .rand-scor {
     display: grid;
-    grid-template-columns: 1fr 100px 100px; 
+    grid-template-columns: 1.5fr 1fr 1fr; /* Nume | Nivel | Scor */
     align-items: center;
-    padding: 12px 15px;
-    margin-bottom: 8px;
-    background: rgba(0, 0, 0, 0.25);
-    border-radius: 12px;
-    transition: all 0.2s ease;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
     border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
 }
 
 .rand-scor:hover {
     background: rgba(255, 255, 255, 0.1);
-    transform: scale(1.02);
+    transform: translateX(5px);
 }
 
 .rand-scor span:nth-child(2) {
     text-align: center;
-    color: white;
-    font-weight: bold;
+    font-weight: 600;
+    color: #00d4ff; /* Culoare accent pentru nivel */
 }
 
 .rand-scor span:nth-child(3) {
     text-align: right;
-    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: #ffd700; /* Culoare aurie pentru puncte */
 }
 
-.lista-scoruri {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding-right: 8px;
+/* --- LOCUL TĂU (HIGHLIGHT) --- */
+.meu-loc-special {
+    background: rgba(0, 212, 255, 0.2) !important;
+    border: 1px solid rgba(0, 212, 255, 0.4) !important;
 }
 
 .separator-leaderboard {
     display: flex;
     align-items: center;
     text-align: center;
-    margin: 20px 0 10px 0;
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 12px;
+    margin: 25px 0 15px 0;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13px;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
 }
 
 .separator-leaderboard::before,
@@ -101,5 +152,29 @@
 }
 
 .separator-leaderboard span {
-    padding: 0 10px;
+    padding: 0 15px;
+}
+
+/* --- BUTON IEȘIRE --- */
+#iesire {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 12px 30px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 100;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+}
+
+#iesire:hover {
+    background: rgba(255, 77, 77, 0.8); /* Se face roșu la hover */
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);
 }
