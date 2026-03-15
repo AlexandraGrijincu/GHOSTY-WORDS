@@ -144,8 +144,28 @@ function pierdeViata() {
     vieti--;
     // Observă că am șters condiția de terminaJocul de aici!
 }
+async function salveazaScorul(scorFinal) {
+    const userId = localStorage.getItem('userId'); // Preluăm ID-ul utilizatorului
+    if (!userId) return;
 
-function terminaJocul(aCastigat) {
+    try {
+        await fetch('/api/battle/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                userId: userId, 
+                score: scorFinal, 
+                level: 3 // Nivelul curent care a fost terminat
+            })
+        });
+        // Opțional: Actualizăm și local progresul ca să fie instantaneu
+        localStorage.setItem('userProgress', 4); 
+    } catch (e) { 
+        console.error("Eroare la salvarea progresului:", e); 
+    }
+}
+
+async function terminaJocul(aCastigat) {
     const ecranFinal = document.getElementById('ecran-final');
     const titluFinal = document.getElementById('titlu-final');
     const scorFinal = document.getElementById('scor-final');
@@ -157,6 +177,7 @@ function terminaJocul(aCastigat) {
         titluFinal.innerText = "Felicitări! Ai învățat Past Simple!";
         titluFinal.style.color = "#4caf50";
         document.getElementById('btn-next').classList.remove('ascuns');
+        await salveazaScorul(scor);
     } else {
         titluFinal.innerText = "Mai încearcă!";
         titluFinal.style.color = "#ff4d4d";

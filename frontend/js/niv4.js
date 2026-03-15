@@ -181,15 +181,6 @@ input.addEventListener('input', async () => {
     }
 });
 
-async function salveazaScorul(scorFinal) {
-    try {
-        await fetch('/api/battle/save', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId: 1, score: scorFinal, level: 1 })
-        });
-    } catch (e) { console.error("Eroare salvare scor"); }
-}
 
 
 const imaginiVrajitoare = ["../imagini/vrajitoare/v1.png", "../imagini/vrajitoare/v2.png", "../imagini/vrajitoare/v3.png"];
@@ -212,6 +203,27 @@ butonIesire.addEventListener('click', () => {
 
 butonIesire.style.cursor = "pointer";
 
+async function salveazaScorul(scorFinal) {
+    const userId = localStorage.getItem('userId'); // Preluăm ID-ul utilizatorului
+    if (!userId) return;
+
+    try {
+        await fetch('/api/battle/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                userId: userId, 
+                score: scorFinal, 
+                level: 4 // Nivelul curent care a fost terminat
+            })
+        });
+        // Opțional: Actualizăm și local progresul ca să fie instantaneu
+        localStorage.setItem('userProgress', 5); 
+    } catch (e) { 
+        console.error("Eroare la salvarea progresului:", e); 
+    }
+}
+
 async function terminaJocul(aCastigat) {
     gameActive = false;
     ecranFinal.classList.remove('ascuns');
@@ -230,12 +242,12 @@ async function terminaJocul(aCastigat) {
         await actualizeazaProgresServer(urmatorulNivel);
         
         localStorage.setItem('userProgress', urmatorulNivel);
+        await salveazaScorul(scor);
     } else {
         titluFinal.innerText = "Ai pierdut!";
         titluFinal.style.color = "#ff4d4d";
         btnNext.classList.add('ascuns');
     }
-    await salveazaScorul(scor);
 }
 
 async function actualizeazaProgresServer(nouNivel) {
@@ -259,7 +271,7 @@ async function actualizeazaProgresServer(nouNivel) {
 
 async function incarcaVerbeBD(){
     try{
-        const raspuns=await fetch('http://localhost:8080/api');
+        const raspuns=await fetch('http://localhost:8080/api/verbe');
         const date=await raspuns.json();
 
         console.log("Date primite de la Server",date);
@@ -283,6 +295,7 @@ async function incarcaVerbeBD(){
         console.error("Eroare la fetch: ",error);
     }
 }
+
 
 seteazaIdlePersonaj();
 incarcaVerbeBD();
