@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import back.model.Users;
 import back.model.Word;
+import back.model.nivel4_word;
+import back.repository.Nivel4Repository;
 import back.repository.UserRepository;
 import back.repository.WordRepository;
 import back.service.ScorService;
@@ -117,5 +119,12 @@ public class AuthController {
     @GetMapping("/getWordsall")
     public List<Word> getWordsall() {
         return wordRepository.findAll();
+    }
+
+    @Autowired
+    private Nivel4Repository repository; 
+    @GetMapping("/verbe")
+    public List<nivel4_word> getVerbe() {
+        return repository.findAll();
     }
 }

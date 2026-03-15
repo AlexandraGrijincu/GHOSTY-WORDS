@@ -10,7 +10,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name ="nivel3_word")
+@Table(name ="nivel4_word")
 public class nivel4_word {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class nivel4_word {
     @Column(name = "ro_present_continuous")
     private String ro_present_continuous;
 
-    @Column(name="en_prsent_continuous")
+    @Column(name="en_present_continuous")
     private String en_present_continuous;
 
     public Word getWord() { return word; }
