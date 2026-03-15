@@ -1,4 +1,4 @@
-// Preluăm progresul utilizatorului
+
 let nivelDeDeblocat = parseInt(localStorage.getItem('userProgress')) || 1;
 
 function updateMap() {
@@ -27,7 +27,7 @@ function updateMap() {
       const startLabel = document.createElement('div');
       startLabel.className = 'start-bubble';
       if (level === nivelDeDeblocat) {
-        startLabel.innerText = "START"; // Text pentru nivelul curent
+        startLabel.innerText = "START"; 
       }
 
       const btnScris = document.createElement('div');
@@ -86,19 +86,19 @@ const butonDeconectare = document.getElementById('deconectare');
 
 if (butonDeconectare) {
   butonDeconectare.addEventListener('click', () => {
-    // 1. Ștergem datele de sesiune (localStorage sau sessionStorage)
+    //Ștergem datele de sesiune (localStorage sau sessionStorage)
     localStorage.clear();
     sessionStorage.clear();
 
-    // 2. Luăm link-ul din atributul href al div-ului
+    // Luăm link-ul din atributul href al div-ului
     const paginaLogin = butonDeconectare.getAttribute('href');
 
-    // 3. Trimitem utilizatorul la pagina de login
+    // Trimitem utilizatorul la pagina de login
     window.location.href = paginaLogin;
   });
 }
 
-// Înlocuiește partea de sus a fișierului pag.js
+
 async function incarcaHarta() {
   const userId = localStorage.getItem('userId');
   let nivelDeDeblocat = 1;

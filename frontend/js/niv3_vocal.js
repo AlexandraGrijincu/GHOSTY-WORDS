@@ -157,5 +157,17 @@ function termina(win) {
     }
 }
 
+const butonIesire = document.getElementById('iesire');
+
+// Adăugăm evenimentul de click
+butonIesire.addEventListener('click', () => {
+    
+    const destinatie = butonIesire.getAttribute('href'); 
+    window.location.href = destinatie;
+});
+
+
+butonIesire.style.cursor = "pointer";
+
 // Încărcăm primul exercițiu la start
 window.onload = incarcaEx;

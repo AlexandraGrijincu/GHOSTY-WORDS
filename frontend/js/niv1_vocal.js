@@ -34,7 +34,7 @@ const btnNext = document.getElementById('btn-next');
 const personajElem = document.getElementById("personaj");
 const cuvantDetectatElem = document.getElementById('cuvant-detectat');
 
-// Căile imaginilor - Verifică să fie corecte în folderul tău!
+// Căile imaginilor 
 const imaginiAnimatie = [
     "../images/idel.png", 
     "../images/001.png", 
@@ -124,14 +124,12 @@ function joc() {
 
     pozitieX += vitezaCurenta;
     // Efect de plutire ușoară pe verticală
-    //pozitieY = 100 + Math.sin(Date.now() / 500) * 20;
-    //pozitieY += vitezaCurenta * 0.5; // Mișcare diagonală
     pozitieY = 200 + Math.sin(Date.now() / 500) * 30;
     
     ghostCont.style.right = pozitieX + "px";
     ghostCont.style.top = pozitieY + "px";
 
-    // Dacă fantoma ajunge la personaj (aprox 60% din lățime)
+    // Dacă fantoma ajunge la personaj
     if (pozitieX > window.innerWidth * 0.45) {
         pierdeViata();
     } else {
@@ -151,7 +149,7 @@ async function pierdeViata() {
         terminaJocul(false);
     } else {
         spawnFantoma();
-        // Mică pauză să nu apară instant
+        
         pauzaFantoma = true;
         setTimeout(() => { pauzaFantoma = false; }, 500);
         requestAnimationFrame(joc); 
@@ -225,6 +223,17 @@ async function salveazaScorul(scorFinal) {
         });
     } catch (e) { console.error("Eroare salvare scor"); }
 }
+const butonIesire = document.getElementById('iesire');
+
+// Adăugăm evenimentul de click
+butonIesire.addEventListener('click', () => {
+   
+    const destinatie = butonIesire.getAttribute('href'); 
+    window.location.href = destinatie;
+});
+
+
+butonIesire.style.cursor = "pointer";
 
 // --- INITIALIZARE ---
 window.onload = () => {

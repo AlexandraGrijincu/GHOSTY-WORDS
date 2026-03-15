@@ -168,7 +168,17 @@ async function pornesteAnimatiePersonaj() {
     
     if (gameActive) spawnFantoma(); 
 }
+const butonIesire = document.getElementById('iesire');
 
+// Adăugăm evenimentul de click
+butonIesire.addEventListener('click', () => {
+    
+    const destinatie = butonIesire.getAttribute('href'); 
+    window.location.href = destinatie;
+});
+
+
+butonIesire.style.cursor = "pointer";
 
 async function terminaJocul(aCastigat) {
     gameActive = false;

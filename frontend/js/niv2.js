@@ -117,7 +117,7 @@ async function terminaJocul(aCastigat) {
     await salveazaScorul(scor);
 }
 
-// --- ANIMATIE PERSONAJ (MODIFICATĂ) ---
+// --- ANIMATIE PERSONAJ  ---
 
 const asteaptaMs = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -202,18 +202,18 @@ setInterval(() => {
     frameVrajitoare = (frameVrajitoare + 1) % imaginiVrajitoare.length;
     const vImg = document.getElementById('vrajitoare');
     if (vImg) vImg.src = imaginiVrajitoare[frameVrajitoare];
-}, 100); // Am pus 150ms pentru o mișcare mai naturală
+}, 100); 
 
 const butonIesire = document.getElementById('iesire');
 
 // Adăugăm evenimentul de click
 butonIesire.addEventListener('click', () => {
-    // Înlocuiește "selectie_nivele.html" cu numele paginii tale principale
+   
     const destinatie = butonIesire.getAttribute('href'); 
     window.location.href = destinatie;
 });
 
-// Adăugăm și un mic efect de hover din cod (opțional, dacă vrei să se simtă interactiv)
+
 butonIesire.style.cursor = "pointer";
 
 
@@ -222,12 +222,12 @@ async function actualizeazaProgresServer(nouNivel) {
     if (!userId) return;
 
     try {
-        await fetch('http://localhost:8080/api/user/update-progress', { // Adaugă URL-ul complet dacă e cazul
+        await fetch('http://localhost:8080/api/user/update-progress', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                userId: parseInt(userId), // Trimite-l ca număr
-                level: nouNivel // Numele trebuie să fie "level" ca în Java
+                userId: parseInt(userId), 
+                level: nouNivel 
             })
         });
     } catch (error) {
@@ -248,7 +248,7 @@ async function salveazaScorul(scorFinal) {
                 level: 2 // Nivelul curent care a fost terminat
             })
         });
-        // Opțional: Actualizăm și local progresul ca să fie instantaneu
+        
         localStorage.setItem('userProgress', 3); 
     } catch (e) { 
         console.error("Eroare la salvarea progresului:", e); 
@@ -308,7 +308,7 @@ async function terminaJocul(aCastigat) {
         titluFinal.style.color = "#4caf50";
         btnNext.classList.remove('ascuns');
 
-        // Preluăm nivelul actual din URL (ex: ?id=1)
+        // Preluăm nivelul actual din URL 
         const params = new URLSearchParams(window.location.search);
         let nivelCurent = parseInt(params.get('id')) || 1;
         let urmatorulNivel = nivelCurent + 1;

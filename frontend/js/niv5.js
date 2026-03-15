@@ -105,6 +105,17 @@ function avanseazaJocul() {
         terminaJocul(true);
     }
 }
+const butonIesire = document.getElementById('iesire');
+
+// Adăugăm evenimentul de click
+butonIesire.addEventListener('click', () => {
+    
+    const destinatie = butonIesire.getAttribute('href'); 
+    window.location.href = destinatie;
+});
+
+
+butonIesire.style.cursor = "pointer";
 
 async function pornesteAnimatieVrajitoare(esteCorect) {
     esteInAnimatie = true;
@@ -132,6 +143,42 @@ function pierdeViata() {
         inima.classList.add('lovita');
     }
     vieti--;
+}
+async function salveazaScorul(scorFinal) {
+    const userId = localStorage.getItem('userId'); // Preluăm ID-ul utilizatorului
+    if (!userId) return;
+
+    try {
+        await fetch('/api/battle/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                userId: userId, 
+                score: scorFinal, 
+                level: 5 // Nivelul curent care a fost terminat
+            })
+        }); 
+    } catch (e) { 
+        console.error("Eroare la salvarea progresului:", e); 
+    }
+}
+
+async function actualizeazaProgresServer(nouNivel) {
+    const userId = localStorage.getItem('userId');
+    if (!userId) return;
+
+    try {
+        await fetch('http://localhost:8080/api/user/update-progress', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: parseInt(userId), 
+                level: nouNivel 
+            })
+        });
+    } catch (error) {
+        console.error("Eroare la salvarea progresului:", error);
+    }
 }
 
 function terminaJocul(aCastigat) {
