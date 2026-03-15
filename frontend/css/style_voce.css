@@ -8,6 +8,15 @@ body, html {
     font-family: 'Arial', sans-serif;
 }
 
+.butoane-final button {
+    padding: 10px 25px;
+    margin: 10px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 50px;
+    border: none;
+}
+
 .fundal_nivel {
     position: relative;
     width: 100vw;
