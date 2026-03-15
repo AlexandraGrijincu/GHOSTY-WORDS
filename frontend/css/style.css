@@ -315,7 +315,7 @@ body {
     font-size: 24px;
     font-weight: bold;
     color: white;
-    background: rgba(0, 0, 0, 0.4); /* Un fundal semi-transparent */
+    background: rgba(0, 0, 0, 0.4); 
     padding: 10px 10px;
     border-radius: 15px;
     cursor: pointer;
@@ -328,7 +328,7 @@ body {
 }
 
 #btn-exit {
-    background: #6c757d; /* Un gri neutru */
+    background: #6c757d; 
     color: white;
 }
 
@@ -390,19 +390,19 @@ body {
     filter: drop-shadow(0 0 25px red) brightness(0.7);
 }
 
-/* fantoma cand raspunsul e corect */
+
 .fantoma-verde {
     filter: drop-shadow(0 0 25px lime) brightness(1.2);
 }
 
-/* freeze + atac */
+
 .fantoma-inghetata-verde {
     filter: drop-shadow(0 0 35px lime) brightness(0.5);
     transform: scale(1.1);
     transition: 0.3s;
 }
 
-/* vrajitoare lovita */
+
 .personaj-lovit {
     filter: drop-shadow(0 0 25px red) brightness(0.6);
 }

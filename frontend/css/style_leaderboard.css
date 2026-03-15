@@ -1,4 +1,3 @@
-/* --- RESET GENERAL --- */
 * {
     margin: 0;
     padding: 0;
@@ -13,8 +12,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden; /* Împiedică scroll-ul paginii întregi */
-    background: #0d041a; /* Culoare de siguranță în caz că imaginea nu se încarcă */
+    overflow: hidden; 
+    background: #0d041a;
 }
 
 .fundal_nivel {
@@ -31,7 +30,6 @@ body {
     z-index: 1;
 }
 
-/* Efect de blur pe fundal (opțional, conform codului tău anterior) */
 .fundal_nivel::before {
     content: "";
     position: absolute;
@@ -47,7 +45,7 @@ body {
     position: relative;
     width: 500px;
     max-height: 85vh;
-    background: rgba(255, 255, 255, 0.1); /* Sticlă transparentă */
+    background: rgba(255, 255, 255, 0.1); 
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -78,7 +76,7 @@ body {
     padding-right: 10px;
 }
 
-/* Personalizare Scrollbar */
+
 .lista-scoruri::-webkit-scrollbar {
     width: 6px;
 }
@@ -118,13 +116,13 @@ body {
 .rand-scor span:nth-child(2) {
     text-align: center;
     font-weight: 600;
-    color: #00d4ff; /* Culoare accent pentru nivel */
+    color: #00d4ff; 
 }
 
 .rand-scor span:nth-child(3) {
     text-align: right;
     font-weight: bold;
-    color: #ffd700; /* Culoare aurie pentru puncte */
+    color: #ffd700; 
 }
 
 /* --- LOCUL TĂU (HIGHLIGHT) --- */
@@ -174,7 +172,7 @@ body {
 }
 
 #iesire:hover {
-    background: rgba(255, 77, 77, 0.8); /* Se face roșu la hover */
+    background: rgba(255, 77, 77, 0.8); 
     transform: scale(1.1);
     box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);
 }

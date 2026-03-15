@@ -105,7 +105,7 @@ html, body {
 .sub-node {
     position: absolute;
     top: 0;
-    left: -35px; /* Centrare relativa la container pentru simetrie */
+    left: -35px; 
     background-color: white;
     color: #2b78e4;
     width: 70px;
@@ -130,7 +130,7 @@ html, body {
     visibility: visible;
 }
 
-/* Pozitionare in jos (V intors) sub glob */
+/* Pozitionare in jos sub glob */
 .level-menu-container.active .sub-node.scris {
     transform: translate(-60px, 75px); 
 }
@@ -139,7 +139,7 @@ html, body {
     transform: translate(60px, 75px); 
 }
 
-/* Liniile de legatura (Sagetile) */
+/* Liniile de legatura*/
 .sub-node::before {
     content: '';
     position: absolute;
@@ -177,7 +177,7 @@ html, body {
     font-size: 24px;
     font-weight: bold;
     color: white;
-    background: rgba(0, 0, 0, 0.4); /* Un fundal semi-transparent */
+    background: rgba(0, 0, 0, 0.4); 
     padding: 10px 10px;
     border-radius: 15px;
     cursor: pointer;
@@ -185,7 +185,7 @@ html, body {
 }
 
 #deconectare {
-    background: rgba(132, 22, 149, 0.6); /* Un roșu mai intens pentru logout */
+    background: rgba(132, 22, 149, 0.6); 
 }
 
 #deconectare:hover {
