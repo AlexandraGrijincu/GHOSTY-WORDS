@@ -1,21 +1,4 @@
-const verbe = [
-    { ro: "Eu am mers", en: "i went" },
-    { ro: "Ea a mâncat", en: "she ate" },
-    { ro: "Noi am băut", en: "we drank" },
-    { ro: "Tu ai dormit", en: "you slept" },
-    { ro: "Ei au văzut", en: "they saw" },
-    { ro: "Voi ați vorbit", en: "you spoke" },
-    { ro: "Eu am scris", en: "i wrote" },
-    { ro: "Ea a citit", en: "she read" },
-    { ro: "Noi am alergat", en: "we ran" },
-    { ro: "Tu ai făcut", en: "you did" },
-    { ro: "El a venit", en: "he came" },
-    { ro: "Ele au cântat", en: "they sang" },
-    { ro: "Eu am lucrat", en: "i worked" },
-    { ro: "Voi ați sărit", en: "you jumped" },
-    { ro: "Ei au auzit", en: "they heard" }
-];
-
+let verbe2_audio = [];
 
 let vieti = 3;
 let scor = 0;
@@ -27,9 +10,9 @@ let pozitieY = -200;
 let verbCurent = {};
 let gameActive = true;
 let esteInAnimatiePersonaj = false;
-let pauzaFantoma = false; // Variabilă pentru a îngheța fantoma în timpul animației
+let pauzaFantoma = false; 
 
-// --- ELEMENTE DOM ---
+
 const ghostCont = document.getElementById('container-fantoma');
 const input = document.getElementById('raspuns-utilizator');
 const bubble = document.getElementById('bubble-cuvant');
@@ -46,7 +29,7 @@ const imaginiAnimatie = ["../images/idel.png", "../images/001.png", "../images/0
 
 function spawnFantoma() {
     if (!gameActive) return;
-    verbCurent = verbe[Math.floor(Math.random() * verbe.length)];
+    verbCurent = verbe2_audio[Math.floor(Math.random() * verbe2_audio.length)];
     bubble.innerText = verbCurent.ro;
     pozitieX = -200;
     pozitieY = -100;
@@ -298,8 +281,46 @@ async function salveazaScorul(scorFinal) {
     }
 }
 
+async function incarcaVerbeBD() {
+    try {
+        console.log("Se încarcă datele de la /api/verbe2_audio...");
+        const raspuns = await fetch('http://localhost:8080/api/verbe2_audio');
+        const date = await raspuns.json();
 
-// --- START ---
-seteazaIdlePersonaj();
-spawnFantoma();
-requestAnimationFrame(joc);
+        console.log("Date primite din tabelul GEN:", date);
+
+        verbe2_audio = date.map(v => ({
+            ro: v.ro_past_simple || "Lipsă RO",
+            en: v.en_past_simple ? v.en_past_simple.toLowerCase().trim() : ""
+        }));
+
+        if (verbe2_audio.length > 0) {
+            console.log("Date încărcate cu succes! Verbe disponibile:", verbe2_audio.length);
+            return true; 
+        } else {
+            console.error("Atenție: Serverul a trimis o listă goală!");
+            return false; 
+        }
+    } catch (error) {
+        console.error("Eroare critică la fetch:", error);
+        return false; 
+    }
+}
+
+
+async function pornireJoc() {
+    seteazaIdlePersonaj(); 
+    
+    const succes = await incarcaVerbeBD();
+    
+    if (succes) {
+        console.log("Jocul pornește acum...");
+        spawnFantoma(); 
+        requestAnimationFrame(joc); 
+    } else {
+        console.error("Jocul nu a putut porni deoarece nu sunt date în baza de date.");
+        bubble.innerText = "Eroare date!";
+    }
+}
+
+pornireJoc();
