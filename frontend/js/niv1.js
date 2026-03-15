@@ -32,6 +32,7 @@ const titluFinal = document.getElementById('titlu-final');
 const scorTextFinal = document.getElementById('scor-final');
 const btnNext = document.getElementById('btn-next');
 const personajElem = document.getElementById("personaj");
+const urmatorulNivel=2;
 
 const imaginiAnimatie = ["../images/idel.png", "../images/001.png", "../images/002.png", "../images/003.png"];
 

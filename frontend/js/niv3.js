@@ -29,6 +29,7 @@ const bubbleCuvant = document.getElementById("bubble-cuvant");
 const chenarPropozitie = document.querySelector("#chenar-central p");
 const inputUtilizator = document.getElementById("raspuns-utilizator");
 const scorAfisat = document.getElementById("scor");
+const urmatorulNivel=4;
 
 const imaginiAnimatie = ["../images/idel.png", "../images/001.png", "../images/002.png", "../images/003.png"];
 
@@ -164,7 +165,23 @@ async function salveazaScorul(scorFinal) {
         console.error("Eroare la salvarea progresului:", e); 
     }
 }
+async function actualizeazaProgresServer(nouNivel) {
+    const userId = localStorage.getItem('userId');
+    if (!userId) return;
 
+    try {
+        await fetch('http://localhost:8080/api/user/update-progress', { // Adaugă URL-ul complet dacă e cazul
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: parseInt(userId), // Trimite-l ca număr
+                level: nouNivel // Numele trebuie să fie "level" ca în Java
+            })
+        });
+    } catch (error) {
+        console.error("Eroare la salvarea progresului:", error);
+    }
+}
 async function terminaJocul(aCastigat) {
     const ecranFinal = document.getElementById('ecran-final');
     const titluFinal = document.getElementById('titlu-final');
@@ -178,6 +195,7 @@ async function terminaJocul(aCastigat) {
         titluFinal.style.color = "#4caf50";
         document.getElementById('btn-next').classList.remove('ascuns');
         await salveazaScorul(scor);
+        await actualizeazaProgresServer(urmatorulNivel);
     } else {
         titluFinal.innerText = "Mai încearcă!";
         titluFinal.style.color = "#ff4d4d";

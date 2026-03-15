@@ -22,6 +22,8 @@ const titluFinal = document.getElementById('titlu-final');
 const scorTextFinal = document.getElementById('scor-final');
 const btnNext = document.getElementById('btn-next');
 const personajElem = document.getElementById("personaj");
+const urmatorulNivel=5;
+
 
 const imaginiAnimatie = ["../images/idel.png", "../images/001.png", "../images/002.png", "../images/003.png"];
 
@@ -114,7 +116,23 @@ async function terminaJocul(aCastigat) {
     }
     await salveazaScorul(scor);
 }
+async function actualizeazaProgresServer(nouNivel) {
+    const userId = localStorage.getItem('userId');
+    if (!userId) return;
 
+    try {
+        await fetch('http://localhost:8080/api/user/update-progress', { // Adaugă URL-ul complet dacă e cazul
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: parseInt(userId), // Trimite-l ca număr
+                level: nouNivel // Numele trebuie să fie "level" ca în Java
+            })
+        });
+    } catch (error) {
+        console.error("Eroare la salvarea progresului:", error);
+    }
+}
 
 const asteaptaMs = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -295,6 +313,7 @@ async function incarcaVerbeBD(){
         console.error("Eroare la fetch: ",error);
     }
 }
+
 
 
 seteazaIdlePersonaj();
