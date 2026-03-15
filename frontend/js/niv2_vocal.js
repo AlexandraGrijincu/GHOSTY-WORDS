@@ -168,7 +168,17 @@ async function pornesteAnimatiePersonaj() {
     
     if (gameActive) spawnFantoma(); 
 }
+const butonIesire = document.getElementById('iesire');
 
+// Adăugăm evenimentul de click
+butonIesire.addEventListener('click', () => {
+    // Înlocuiește "selectie_nivele.html" cu numele paginii tale principale
+    const destinatie = butonIesire.getAttribute('href'); 
+    window.location.href = destinatie;
+});
+
+// Adăugăm și un mic efect de hover din cod (opțional, dacă vrei să se simtă interactiv)
+butonIesire.style.cursor = "pointer";
 
 async function terminaJocul(aCastigat) {
     gameActive = false;

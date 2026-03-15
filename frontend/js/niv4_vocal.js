@@ -1,5 +1,16 @@
-let nivel4_word = [];
+// --- DATE JOC ---
+const verbe = [
+    { ro: "a merge", en: "to go" }, { ro: "a manca", en: "to eat" },
+    { ro: "a bea", en: "to drink" }, { ro: "a dormi", en: "to sleep" },
+    { ro: "a vedea", en: "to see" }, { ro: "a vorbi", en: "to speak" },
+    { ro: "a scrie", en: "to write" }, { ro: "a citi", en: "to read" },
+    { ro: "a alerga", en: "to run" }, { ro: "a face", en: "to do" },
+    { ro: "a veni", en: "to come" }, { ro: "a canta", en: "to sing" },
+    { ro: "a lucra", en: "to work" }, { ro: "a sari", en: "to jump" },
+    { ro: "a auzi", en: "to hear" }
+];
 
+// --- VARIABILE STARE ---
 let vieti = 3;
 let scor = 0;
 let vitezaBaza = 1.2;
@@ -23,7 +34,7 @@ const btnNext = document.getElementById('btn-next');
 const personajElem = document.getElementById("personaj");
 const cuvantDetectatElem = document.getElementById('cuvant-detectat');
 
-
+// Căile imaginilor - Verifică să fie corecte în folderul tău!
 const imaginiAnimatie = [
     "../images/idel.png", 
     "../images/001.png", 
@@ -31,6 +42,7 @@ const imaginiAnimatie = [
     "../images/003.png"
 ];
 
+// --- CONFIGURARE RECUNOAȘTERE VOCALĂ ---
 
 function initializareRecunoastereVocala() {
     window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -67,6 +79,7 @@ function initializareRecunoastereVocala() {
 async function verificaRaspuns(pronuntie) {
     if (!gameActive || pauzaFantoma) return;
 
+    // Eliminăm "to " din ambele părți pentru a fi mai permisiv
     let raspunsUtilizator = pronuntie.replace(/^to\s+/, "").trim();
     let raspunsCorect = verbCurent.en.replace(/^to\s+/, "").trim();
 
@@ -81,25 +94,39 @@ async function verificaRaspuns(pronuntie) {
             terminaJocul(true);
         } else {
             vitezaCurenta += 0.15;
+            // spawnFantoma() este apelat automat la finalul animației personajului
         }
     }
 }
 
+// --- LOGICA MISCARE FANTOMA ---
 
 function spawnFantoma() {
     if (!gameActive) return;
-    verbCurent = nivel4_word[Math.floor(Math.random() * nivel4_word.length)];
+    verbCurent = verbe[Math.floor(Math.random() * verbe.length)];
     bubble.innerText = verbCurent.ro;
     
+    // Resetăm poziția fantomei
     pozitieX = -200; 
     pozitieY = -100; 
     
     ghostCont.style.right = pozitieX + "px";
     ghostCont.style.top = pozitieY + "px";
 }
+const butonIesire = document.getElementById('iesire');
+
+// Adăugăm evenimentul de click
+butonIesire.addEventListener('click', () => {
+    // Înlocuiește "selectie_nivele.html" cu numele paginii tale principale
+    const destinatie = butonIesire.getAttribute('href'); 
+    window.location.href = destinatie;
+});
+
+// Adăugăm și un mic efect de hover din cod (opțional, dacă vrei să se simtă interactiv)
+butonIesire.style.cursor = "pointer";
 
 function joc() {
-    if (!gameActive ) return;
+    if (!gameActive) return;
 
     if (pauzaFantoma) {
         requestAnimationFrame(joc);
@@ -107,11 +134,15 @@ function joc() {
     }
 
     pozitieX += vitezaCurenta;
+    // Efect de plutire ușoară pe verticală
+    //pozitieY = 100 + Math.sin(Date.now() / 500) * 20;
+    //pozitieY += vitezaCurenta * 0.5; // Mișcare diagonală
     pozitieY = 200 + Math.sin(Date.now() / 500) * 30;
     
     ghostCont.style.right = pozitieX + "px";
     ghostCont.style.top = pozitieY + "px";
 
+    // Dacă fantoma ajunge la personaj (aprox 60% din lățime)
     if (pozitieX > window.innerWidth * 0.45) {
         pierdeViata();
     } else {
@@ -131,11 +162,14 @@ async function pierdeViata() {
         terminaJocul(false);
     } else {
         spawnFantoma();
+        // Mică pauză să nu apară instant
         pauzaFantoma = true;
         setTimeout(() => { pauzaFantoma = false; }, 500);
         requestAnimationFrame(joc); 
     }
 }
+
+// --- ANIMATIE PERSONAJ ---
 
 const asteaptaMs = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -148,6 +182,7 @@ async function pornesteAnimatiePersonaj() {
     esteInAnimatiePersonaj = true;
     pauzaFantoma = true; 
 
+    // Cadre de atac
     for (let i = 1; i < imaginiAnimatie.length; i++) {
         personajElem.style.backgroundImage = `url('${imaginiAnimatie[i]}')`;
         await asteaptaMs(100);
@@ -157,6 +192,7 @@ async function pornesteAnimatiePersonaj() {
     await asteaptaMs(400); 
     personajElem.classList.remove("stare-speciala");
 
+    // Revenire la idle
     for (let i = imaginiAnimatie.length - 2; i >= 0; i--) {
         personajElem.style.backgroundImage = `url('${imaginiAnimatie[i]}')`;
         await asteaptaMs(100);
@@ -169,6 +205,7 @@ async function pornesteAnimatiePersonaj() {
     if (gameActive) spawnFantoma(); 
 }
 
+// --- FINAL JOC ---
 
 async function terminaJocul(aCastigat) {
     gameActive = false;
@@ -200,38 +237,10 @@ async function salveazaScorul(scorFinal) {
     } catch (e) { console.error("Eroare salvare scor"); }
 }
 
-
-async function incarcaVerbeBD(){
-    try {
-        const raspuns = await fetch('http://localhost:8080/api/verbe');
-        const date = await raspuns.json();
-
-        console.log("Date brute de la Server:", date);
-
-        nivel4_word = date.map(v => ({
-            ro: v.ro_present_continuous || "Lipsa text",
-            en: (v.en_present_continuous ||  "").toLowerCase().trim()
-        }));
-
-
-        if (nivel4_word.length > 0) {
-            console.log("Verbele s-au mapat corect!");
-            spawnFantoma();
-        } else {
-            console.error("Serverul a trimis o lista goala");
-            bubble.innerText = "DB Goală!";
-        }
-    
-    } catch (error) {
-        console.error("Eroare la fetch: ", error);
-        bubble.innerText = "Eroare Conexiune!";
-    }
-}
-
-window.onload = async () => {
+// --- INITIALIZARE ---
+window.onload = () => {
     seteazaIdlePersonaj();
-    
-    await incarcaVerbeBD();
+    spawnFantoma();
     initializareRecunoastereVocala();
     requestAnimationFrame(joc);
 };

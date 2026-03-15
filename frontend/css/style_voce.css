@@ -17,6 +17,20 @@ body, html {
     border: none;
 }
 
+#iesire {
+    position: fixed;
+    bottom: 10px;
+    right: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    background: rgba(0, 0, 0, 0.4); /* Un fundal semi-transparent */
+    padding: 10px 10px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
 .fundal_nivel {
     position: relative;
     width: 100vw;

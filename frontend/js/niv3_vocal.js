@@ -157,5 +157,17 @@ function termina(win) {
     }
 }
 
+const butonIesire = document.getElementById('iesire');
+
+// Adăugăm evenimentul de click
+butonIesire.addEventListener('click', () => {
+    // Înlocuiește "selectie_nivele.html" cu numele paginii tale principale
+    const destinatie = butonIesire.getAttribute('href'); 
+    window.location.href = destinatie;
+});
+
+// Adăugăm și un mic efect de hover din cod (opțional, dacă vrei să se simtă interactiv)
+butonIesire.style.cursor = "pointer";
+
 // Încărcăm primul exercițiu la start
 window.onload = incarcaEx;
