@@ -121,12 +121,12 @@ async function actualizeazaProgresServer(nouNivel) {
     if (!userId) return;
 
     try {
-        await fetch('http://localhost:8080/api/user/update-progress', { // Adaugă URL-ul complet dacă e cazul
+        await fetch('http://localhost:8080/api/user/update-progress', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                userId: parseInt(userId), // Trimite-l ca număr
-                level: nouNivel // Numele trebuie să fie "level" ca în Java
+                userId: parseInt(userId), 
+                level: nouNivel
             })
         });
     } catch (error) {
@@ -222,7 +222,7 @@ butonIesire.addEventListener('click', () => {
 butonIesire.style.cursor = "pointer";
 
 async function salveazaScorul(scorFinal) {
-    const userId = localStorage.getItem('userId'); // Preluăm ID-ul utilizatorului
+    const userId = localStorage.getItem('userId');
     if (!userId) return;
 
     try {
@@ -232,7 +232,7 @@ async function salveazaScorul(scorFinal) {
             body: JSON.stringify({ 
                 userId: userId, 
                 score: scorFinal, 
-                level: 4 // Nivelul curent care a fost terminat
+                level: 4 
             })
         });
         // Opțional: Actualizăm și local progresul ca să fie instantaneu
@@ -298,6 +298,8 @@ async function incarcaVerbeBD(){
             ro: v.ro_present_continuous || "Lipsa text",
             en: (v.en_present_continuous.toLowerCase() || "").trim()
         }));
+
+        
 
         if(nivel4_word.length>0)
         {
