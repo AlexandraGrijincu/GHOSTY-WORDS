@@ -1,5 +1,5 @@
-
-let nivelDeDeblocat = parseInt(localStorage.getItem('userProgress')) || 1;
+// Forțăm nivelul la 5 din start pentru a debloca toate nivelurile
+let nivelDeDeblocat = 5;
 
 function updateMap() {
   const nodes = document.querySelectorAll('.level-node');
@@ -9,9 +9,10 @@ function updateMap() {
     const oldContainer = node.querySelector('.level-menu-container');
     if (oldContainer) oldContainer.remove();
 
-    // --- LOGICA MODIFICATĂ ---
+    // Verificăm dacă nivelul este deblocat (toate vor fi, deoarece am setat la 5)
     if (level <= nivelDeDeblocat) {
-      // Dacă nivelul este terminat SAU este cel curent
+      
+      // Setăm clasele pentru aspectul butoanelor
       if (level < nivelDeDeblocat) {
         node.classList.add('completed');
         node.classList.remove('current', 'locked');
@@ -20,15 +21,9 @@ function updateMap() {
         node.classList.remove('completed', 'locked');
       }
 
-      // Adăugăm meniul (WRITE / SPEAK) pentru ambele stări
+      // Creăm containerul pentru meniul cu WRITE și SPEAK
       const container = document.createElement('div');
       container.className = 'level-menu-container';
-
-      const startLabel = document.createElement('div');
-      startLabel.className = 'start-bubble';
-      if (level === nivelDeDeblocat) {
-        startLabel.innerText = "START"; 
-      }
 
       const btnScris = document.createElement('div');
       btnScris.className = 'sub-node scris';
@@ -54,17 +49,15 @@ function updateMap() {
         container.classList.toggle('active');
       };
 
-      startLabel.onclick = toggleMenu;
       node.onclick = toggleMenu;
 
-      if(level == nivelDeDeblocat)
-        container.appendChild(startLabel);
+      // Adăugăm doar butoanele WRITE și SPEAK (fără START)
       container.appendChild(btnScris);
       container.appendChild(btnAudio);
       node.appendChild(container);
 
     } else {
-      // Nivelul rămâne blocat
+      // Nivelul rămâne blocat (Nu se va mai ajunge aici, dar e bine de lăsat ca măsură de siguranță)
       node.classList.add('locked');
       node.classList.remove('completed', 'current');
       node.onclick = () => { console.log("Nivel blocat!"); };
@@ -86,36 +79,12 @@ const butonDeconectare = document.getElementById('deconectare');
 
 if (butonDeconectare) {
   butonDeconectare.addEventListener('click', () => {
-    //Ștergem datele de sesiune (localStorage sau sessionStorage)
+    // Ștergem datele de sesiune salvate local
     localStorage.clear();
     sessionStorage.clear();
 
-    // Luăm link-ul din atributul href al div-ului
+    // Luăm link-ul din atributul href al div-ului și trimitem utilizatorul la pagina de login
     const paginaLogin = butonDeconectare.getAttribute('href');
-
-    // Trimitem utilizatorul la pagina de login
     window.location.href = paginaLogin;
   });
-}
-
-
-async function incarcaHarta() {
-  const userId = localStorage.getItem('userId');
-  let nivelDeDeblocat = 1;
-
-  if (userId) {
-    try {
-      // Cerem nivelul de la baza de date
-      const response = await fetch(`/api/user/progress/${userId}`);
-      const data = await response.json();
-      nivelDeDeblocat = data.currentLevel;
-      // Sincronizăm localstorage
-      localStorage.setItem('userProgress', nivelDeDeblocat);
-    } catch (e) {
-      console.log("Server inaccesibil, folosim date locale.");
-      nivelDeDeblocat = parseInt(localStorage.getItem('userProgress')) || 1;
-    }
-  }
-
-  updateMap(nivelDeDeblocat);
 }

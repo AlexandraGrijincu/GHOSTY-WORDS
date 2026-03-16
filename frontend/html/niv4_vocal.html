@@ -3,9 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Nivel</title>
+    <title>Nivel - Present Continuous</title>
     <link rel="stylesheet" href="../css/style_voce.css">
-
 </head>
 
 <body>
@@ -27,22 +26,28 @@
         <div class="zona-input">
             <div id="status-microfon" class="status-mic">🎤 Ascult...</div>
             <div id="cuvant-detectat" style="color: white; font-style: italic;"></div>
+            
+            <div id="indicatie-timp" style="margin-top: 15px; padding: 8px 20px; border: 2px solid #00d4ff; border-radius: 10px; color: white; background-color: rgba(0, 0, 0, 0.6); font-weight: bold; text-transform: uppercase; display: inline-block; letter-spacing: 1px; box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);">
+                Present Continuous
+            </div>
         </div>
-        <div id="iesire" href="pag.html">Iesire</div>
 
+        <div id="iesire" href="pag.html">Iesire</div>
     </div>
+
     <div id="ecran-final" class="ascuns">
         <div class="continut-final">
             <h1 id="titlu-final">Ai pierdut!</h1>
             <p id="scor-final">Scor: 0</p>
             <div class="butoane-final">
-                <button id="btn-restart" onclick="location.reload()" href="niv4_vocal.html">Restart</button>
+                <button id="btn-restart" onclick="location.reload()">Restart</button>
                 <button id="btn-next" class="ascuns" onclick="window.location.href='niv5_vocal.html'">Nivelul Următor</button>
-                <button id="btn-exit"  onclick="window.location.href='pag.html'">Ieșire</button>
+                <button id="btn-exit" onclick="window.location.href='pag.html'">Ieșire</button>
             </div>
         </div>
     </div>
-    <script src="../js/niv1_vocal.js"></script>
+
+    <script src="../js/niv4_vocal.js"></script>
 
 </body>
 

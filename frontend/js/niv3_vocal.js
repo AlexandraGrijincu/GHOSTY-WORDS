@@ -1,8 +1,31 @@
 const exercitii = [
+    // --- Cele originale ---
     { text: "The student .... a long essay.", raspuns: "wrote", infinitiv: "to write" },
     { text: "She .... her homework very fast.", raspuns: "did", infinitiv: "to do" },
     { text: "They .... all the water.", raspuns: "drank", infinitiv: "to drink" },
-    { text: "I .... a big pizza last night.", raspuns: "ate", infinitiv: "to eat" }
+    { text: "I .... a big pizza last night.", raspuns: "ate", infinitiv: "to eat" },
+
+    // --- Cele noi adăugate ---
+    { text: "He .... to the cinema yesterday.", raspuns: "went", infinitiv: "to go" },
+    { text: "We .... a great movie last weekend.", raspuns: "saw", infinitiv: "to see" },
+    { text: "The baby .... all night long.", raspuns: "slept", infinitiv: "to sleep" },
+    { text: "She .... to the teacher after class.", raspuns: "spoke", infinitiv: "to speak" },
+    { text: "I .... a whole book on Sunday.", raspuns: "read", infinitiv: "to read" },
+    { text: "The dog .... away from the yard.", raspuns: "ran", infinitiv: "to run" },
+    { text: "My friends .... to my birthday party.", raspuns: "came", infinitiv: "to come" },
+    { text: "The choir .... a beautiful song.", raspuns: "sang", infinitiv: "to sing" },
+    { text: "My dad .... late yesterday.", raspuns: "worked", infinitiv: "to work" },
+    { text: "The cat .... over the tall fence.", raspuns: "jumped", infinitiv: "to jump" },
+    { text: "I .... a strange noise in the dark.", raspuns: "heard", infinitiv: "to hear" },
+    { text: "We .... football in the park.", raspuns: "played", infinitiv: "to play" },
+    { text: "My sister .... a new dress.", raspuns: "bought", infinitiv: "to buy" },
+    { text: "The police .... the thief quickly.", raspuns: "caught", infinitiv: "to catch" },
+    { text: "The little bird .... into the sky.", raspuns: "flew", infinitiv: "to fly" },
+    { text: "They .... in the cold lake.", raspuns: "swam", infinitiv: "to swim" },
+    { text: "He .... the door behind him.", raspuns: "closed", infinitiv: "to close" },
+    { text: "I .... my keys on the table.", raspuns: "left", infinitiv: "to leave" },
+    { text: "She .... a beautiful picture.", raspuns: "drew", infinitiv: "to draw" },
+    { text: "The teacher .... us a new lesson.", raspuns: "taught", infinitiv: "to teach" }
 ];
 
 let indexCurent = 0, vieti = 3, scor = 0, gameActive = true, esteInAnimatie = false;

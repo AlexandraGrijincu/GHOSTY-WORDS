@@ -1,18 +1,50 @@
-let nivel4_word = [];
+const verbe = [
+    // Acțiuni de bază și mișcare
+    { ro: "eu merg", en: "I am going" }, { ro: "tu mananci", en: "you are eating" },
+    { ro: "el bea", en: "he is drinking" }, { ro: "ea doarme", en: "she is sleeping" },
+    { ro: "noi alergam", en: "we are running" }, { ro: "voi veniti", en: "you are coming" },
+    { ro: "ei pleaca", en: "they are leaving" }, { ro: "ele sar", en: "they are jumping" },
 
+    // Comunicare și învățare
+    { ro: "eu vorbesc", en: "I am speaking" }, { ro: "tu scrii", en: "you are writing" },
+    { ro: "el citeste", en: "he is reading" }, { ro: "ea asculta", en: "she is listening" },
+    { ro: "noi invatam", en: "we are learning" }, { ro: "voi intrebati", en: "you are asking" },
+    { ro: "ei raspund", en: "they are answering" }, { ro: "eu gandesc", en: "I am thinking" },
+
+    // Muncă și activități zilnice
+    { ro: "tu lucrezi", en: "you are working" }, { ro: "el face", en: "he is doing" },
+    { ro: "ea joaca", en: "she is playing" }, { ro: "noi cantam", en: "we are singing" },
+    { ro: "voi cumparati", en: "you are buying" }, { ro: "ei vand", en: "they are selling" },
+    { ro: "ele deschid", en: "they are opening" }, { ro: "eu inchid", en: "I am closing" },
+
+    // Interacțiuni cu obiecte
+    { ro: "tu aduci", en: "you are bringing" }, { ro: "el ia", en: "he is taking" },
+    { ro: "ea da", en: "she is giving" }, { ro: "noi cautam", en: "we are looking" },
+    { ro: "voi gasiti", en: "you are finding" }, { ro: "ei taie", en: "they are cutting" },
+    { ro: "eu ascund", en: "I am hiding" }, { ro: "tu incerci", en: "you are trying" },
+
+    // Stări, emoții și alte acțiuni
+    { ro: "el rade", en: "he is laughing" }, { ro: "ea plange", en: "she is crying" },
+    { ro: "noi zburam", en: "we are flying" }, { ro: "voi inotati", en: "you are swimming" },
+    { ro: "ei stau", en: "they are staying" }, { ro: "ele asteapta", en: "they are waiting" },
+    { ro: "eu ajut", en: "I am helping" }, { ro: "tu privesti", en: "you are watching" },
+    { ro: "el cade", en: "he is falling" }, { ro: "ea simte", en: "she is feeling" }
+];
+
+// --- VARIABILE STARE ---
 let vieti = 3;
 let scor = 0;
 let verbenr = 1;
-let vitezaBaza = 1.0;
+let vitezaBaza = 0.7;
 let vitezaCurenta = vitezaBaza;
 let pozitieX = -200;
 let pozitieY = -200;
 let verbCurent = {};
 let gameActive = true;
 let esteInAnimatiePersonaj = false;
-let pauzaFantoma = false; 
+let pauzaFantoma = false; // Variabilă pentru a îngheța fantoma în timpul animației
 
-
+// --- ELEMENTE DOM ---
 const ghostCont = document.getElementById('container-fantoma');
 const input = document.getElementById('raspuns-utilizator');
 const bubble = document.getElementById('bubble-cuvant');
@@ -22,16 +54,15 @@ const titluFinal = document.getElementById('titlu-final');
 const scorTextFinal = document.getElementById('scor-final');
 const btnNext = document.getElementById('btn-next');
 const personajElem = document.getElementById("personaj");
-const urmatorulNivel=5;
-
+const urmatorulNivel=2;
 
 const imaginiAnimatie = ["../images/idel.png", "../images/001.png", "../images/002.png", "../images/003.png"];
 
-
+// --- LOGICA JOCULUI ---
 
 function spawnFantoma() {
     if (!gameActive) return;
-    verbCurent = nivel4_word[Math.floor(Math.random() * nivel4_word.length)];
+    verbCurent = verbe[Math.floor(Math.random() * verbe.length)];
     bubble.innerText = verbCurent.ro;
     pozitieX = -200;
     pozitieY = -100;
@@ -42,6 +73,7 @@ function spawnFantoma() {
 function joc() {
     if (!gameActive) return;
 
+    // Dacă fantoma este în pauză (pentru animație), doar cerem următorul frame fără să mișcăm poziția
     if (pauzaFantoma) {
         requestAnimationFrame(joc);
         return;
@@ -101,23 +133,23 @@ async function pierdeViata() {
     }
 }
 
-async function actualizeazaProgresServer(nouNivel) {
-    const userId = localStorage.getItem('userId');
-    if (!userId) return;
-
-    try {
-        await fetch('http://localhost:8080/api/user/update-progress', { 
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                userId: parseInt(userId), 
-                level: nouNivel
-            })
-        });
-    } catch (error) {
-        console.error("Eroare la salvarea progresului:", error);
+async function terminaJocul(aCastigat) {
+    gameActive = false;
+    ecranFinal.classList.remove('ascuns');
+    scorTextFinal.innerText = "Scor final: " + scor;
+    if (aCastigat) {
+        titluFinal.innerText = "Felicitări! Ai Câștigat!";
+        titluFinal.style.color = "#4caf50";
+        btnNext.classList.remove('ascuns');
+    } else {
+        titluFinal.innerText = "Ai pierdut!";
+        titluFinal.style.color = "#ff4d4d";
+        btnNext.classList.add('ascuns');
     }
+    await salveazaScorul(scor);
 }
+
+// --- ANIMATIE PERSONAJ (MODIFICATĂ) ---
 
 const asteaptaMs = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -184,8 +216,17 @@ input.addEventListener('input', async () => {
     }
 });
 
+async function salveazaScorul(scorFinal) {
+    try {
+        await fetch('/api/battle/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: 1, score: scorFinal, level: 1 })
+        });
+    } catch (e) { console.error("Eroare salvare scor"); }
+}
 
-
+// --- ANIMATIE VRĂJITOARE ---
 const imaginiVrajitoare = ["../imagini/vrajitoare/v1.png", "../imagini/vrajitoare/v2.png", "../imagini/vrajitoare/v3.png"];
 let frameVrajitoare = 0;
 
@@ -197,35 +238,15 @@ setInterval(() => {
 
 const butonIesire = document.getElementById('iesire');
 
-
+// Adăugăm evenimentul de click
 butonIesire.addEventListener('click', () => {
+   
     const destinatie = butonIesire.getAttribute('href'); 
     window.location.href = destinatie;
 });
 
 
 butonIesire.style.cursor = "pointer";
-
-async function salveazaScorul(scorFinal) {
-    const userId = localStorage.getItem('userId');
-    if (!userId) return;
-
-    try {
-        await fetch('/api/battle/save', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                userId: userId, 
-                score: scorFinal, 
-                level: 4 
-            })
-        });
-        // Opțional: Actualizăm și local progresul ca să fie instantaneu
-        localStorage.setItem('userProgress', 5); 
-    } catch (e) { 
-        console.error("Eroare la salvarea progresului:", e); 
-    }
-}
 
 async function terminaJocul(aCastigat) {
     gameActive = false;
@@ -237,14 +258,16 @@ async function terminaJocul(aCastigat) {
         titluFinal.style.color = "#4caf50";
         btnNext.classList.remove('ascuns');
 
-        
+        // Preluăm nivelul actual din URL 
         const params = new URLSearchParams(window.location.search);
         let nivelCurent = parseInt(params.get('id')) || 1;
+        let urmatorulNivel = nivelCurent + 1;
 
+        // Trimitem progresul la server
         await actualizeazaProgresServer(urmatorulNivel);
-        
-        localStorage.setItem('userProgress', urmatorulNivel);
         await salveazaScorul(scor);
+        // Actualizăm și local pentru o încărcare instantanee a hărții ulterior
+        localStorage.setItem('userProgress', urmatorulNivel);
     } else {
         titluFinal.innerText = "Ai pierdut!";
         titluFinal.style.color = "#ff4d4d";
@@ -252,37 +275,47 @@ async function terminaJocul(aCastigat) {
     }
 }
 
+async function actualizeazaProgresServer(nouNivel) {
+    const userId = localStorage.getItem('userId');
+    if (!userId) return;
 
-async function incarcaVerbeBD(){
-    try{
-        const raspuns=await fetch('http://localhost:8080/api/verbe');
-        const date=await raspuns.json();
+    try {
+        await fetch('http://localhost:8080/api/user/update-progress', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: parseInt(userId), 
+                level: nouNivel 
+            })
+        });
+    } catch (error) {
+        console.error("Eroare la salvarea progresului:", error);
+    }
+}
+async function salveazaScorul(scorFinal) {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+        console.error("Nu am găsit userId în localStorage!");
+        return;
+    }
 
-        console.log("Date primite de la Server",date);
-
-        nivel4_word=date.map(v => ({
-            ro: v.ro_present_continuous || "Lipsa text",
-            en: (v.en_present_continuous.toLowerCase() || "").trim()
-        }));
-
-        
-
-        if(nivel4_word.length>0)
-        {
-            console.log("Verbele cu succes!");
-            spawnFantoma();
-            requestAnimationFrame(joc);
-        } else{
-            console.error("Serverul a trimis o lista goala");
-            bubble.innerText = "DB Goală!";
-        }
-    
-    } catch(error){
-        console.error("Eroare la fetch: ",error);
+    try {
+        await fetch('http://localhost:8080/api/battle/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                userId: parseInt(userId), 
+                score: scorFinal 
+            })
+        });
+        console.log("Scor salvat cu succes!");
+    } catch (e) { 
+        console.error("Eroare la conexiunea cu serverul pentru salvare scor"); 
     }
 }
 
 
-
+// --- START ---
 seteazaIdlePersonaj();
-incarcaVerbeBD();
+spawnFantoma();
+requestAnimationFrame(joc);

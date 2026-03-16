@@ -7,13 +7,27 @@ const verbe = [
     { ro: "a alerga", en: "to run" }, { ro: "a face", en: "to do" },
     { ro: "a veni", en: "to come" }, { ro: "a canta", en: "to sing" },
     { ro: "a lucra", en: "to work" }, { ro: "a sari", en: "to jump" },
-    { ro: "a auzi", en: "to hear" }
+    { ro: "a auzi", en: "to hear" },{ ro: "a juca", en: "to play" }, { ro: "a invata", en: "to learn" },
+    { ro: "a gandi", en: "to think" }, { ro: "a cumpara", en: "to buy" },
+    { ro: "a vinde", en: "to sell" }, { ro: "a deschide", en: "to open" },
+    { ro: "a inchide", en: "to close" }, { ro: "a zbura", en: "to fly" },
+    { ro: "a inota", en: "to swim" }, { ro: "a rade", en: "to laugh" },
+    { ro: "a plange", en: "to cry" }, { ro: "a sta", en: "to stay" },
+    { ro: "a aduce", en: "to bring" }, { ro: "a lua", en: "to take" },
+    { ro: "a da", en: "to give" }, { ro: "a simti", en: "to feel" },
+    { ro: "a iubi", en: "to love" }, { ro: "a uri", en: "to hate" },
+    { ro: "a sti", en: "to know" }, { ro: "a gasi", en: "to find" },
+    { ro: "a pierde", en: "to lose" }, { ro: "a incerca", en: "to try" },
+    { ro: "a intreba", en: "to ask" }, { ro: "a raspunde", en: "to answer" },
+    { ro: "a astepta", en: "to wait" }, { ro: "a intelege", en: "to understand" },
+    { ro: "a ajuta", en: "to help" }, { ro: "a privi", en: "to watch" },
+    { ro: "a taia", en: "to cut" }, { ro: "a cadea", en: "to fall" }
 ];
 
 // --- VARIABILE STARE ---
 let vieti = 3;
 let scor = 0;
-let vitezaBaza = 1.2;
+let vitezaBaza = 0.7;
 let vitezaCurenta = vitezaBaza;
 let pozitieX = -200; 
 let pozitieY = 100; 

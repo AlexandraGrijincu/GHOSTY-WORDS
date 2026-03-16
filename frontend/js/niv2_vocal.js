@@ -1,9 +1,46 @@
-let verbe2_audio = [];
+const verbe = [
+    // Verbul "A FI" (foarte important, e neregulat în engleză la singular/plural)
+    { ro: "eu am fost", en: "I was" }, { ro: "tu ai fost", en: "you were" },
+    { ro: "noi am fost", en: "we were" }, { ro: "ele au fost", en: "they were" },
 
+    // Acțiuni zilnice
+    { ro: "el a mers", en: "he went" }, { ro: "ea a mancat", en: "she ate" },
+    { ro: "noi am baut", en: "we drank" }, { ro: "voi ati dormit", en: "you slept" },
+    { ro: "ei au vazut", en: "they saw" }, { ro: "eu am vorbit", en: "I spoke" },
+    
+    // Învățare și comunicare
+    { ro: "tu ai scris", en: "you wrote" }, { ro: "el a citit", en: "he read" },
+    { ro: "noi am invatat", en: "we learned" }, { ro: "voi ati inteles", en: "you understood" },
+    { ro: "ea a intrebat", en: "she asked" }, { ro: "el a raspuns", en: "he answered" },
+    { ro: "eu am stiut", en: "I knew" },
 
+    // Mișcare și activități
+    { ro: "ea a alergat", en: "she ran" }, { ro: "noi am facut", en: "we did" },
+    { ro: "voi ati venit", en: "you came" }, { ro: "ele au cantat", en: "they sang" },
+    { ro: "eu am lucrat", en: "I worked" }, { ro: "tu ai sarit", en: "you jumped" },
+    { ro: "el a auzit", en: "he heard" }, { ro: "ea a jucat", en: "she played" },
+    { ro: "noi am inotat", en: "we swam" }, { ro: "ele au zburat", en: "they flew" },
+
+    // Obiecte și interacțiuni
+    { ro: "ei au cumparat", en: "they bought" }, { ro: "eu am vandut", en: "I sold" },
+    { ro: "tu ai deschis", en: "you opened" }, { ro: "el a inchis", en: "he closed" },
+    { ro: "tu ai adus", en: "you brought" }, { ro: "el a luat", en: "he took" },
+    { ro: "ea a dat", en: "she gave" }, { ro: "tu ai gasit", en: "you found" },
+    { ro: "el a pierdut", en: "he lost" }, { ro: "ea a taiat", en: "she cut" },
+
+    // Stări și emoții
+    { ro: "voi ati ras", en: "you laughed" }, { ro: "ele au plans", en: "they cried" },
+    { ro: "eu am stat", en: "I stayed" }, { ro: "noi am simtit", en: "we felt" },
+    { ro: "voi ati iubit", en: "you loved" }, { ro: "ei au urat", en: "they hated" },
+    { ro: "ea a incercat", en: "she tried" }, { ro: "ei au asteptat", en: "they waited" },
+    { ro: "tu ai ajutat", en: "you helped" }, { ro: "el a privit", en: "he watched" },
+    { ro: "noi am cazut", en: "we fell" }, { ro: "voi ati gandit", en: "you thought" }
+];
+
+// --- VARIABILE STARE ---
 let vieti = 3;
 let scor = 0;
-let vitezaBaza = 1.2;
+let vitezaBaza = 0.7;
 let vitezaCurenta = vitezaBaza;
 let pozitieX = -200; 
 let pozitieY = 100; 
@@ -13,6 +50,7 @@ let esteInAnimatiePersonaj = false;
 let pauzaFantoma = false; 
 let recognition;
 
+// --- ELEMENTE DOM ---
 const ghostCont = document.getElementById('container-fantoma');
 const bubble = document.getElementById('bubble-cuvant');
 const scorAfisat = document.getElementById('scor');
@@ -23,7 +61,7 @@ const btnNext = document.getElementById('btn-next');
 const personajElem = document.getElementById("personaj");
 const cuvantDetectatElem = document.getElementById('cuvant-detectat');
 
-
+// Căile imaginilor 
 const imaginiAnimatie = [
     "../images/idel.png", 
     "../images/001.png", 
@@ -31,6 +69,7 @@ const imaginiAnimatie = [
     "../images/003.png"
 ];
 
+// --- CONFIGURARE RECUNOAȘTERE VOCALĂ ---
 
 function initializareRecunoastereVocala() {
     window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -67,6 +106,7 @@ function initializareRecunoastereVocala() {
 async function verificaRaspuns(pronuntie) {
     if (!gameActive || pauzaFantoma) return;
 
+    // Eliminăm "to " din ambele părți pentru a fi mai permisiv
     let raspunsUtilizator = pronuntie.replace(/^to\s+/, "").trim();
     let raspunsCorect = verbCurent.en.replace(/^to\s+/, "").trim();
 
@@ -81,16 +121,19 @@ async function verificaRaspuns(pronuntie) {
             terminaJocul(true);
         } else {
             vitezaCurenta += 0.15;
+            // spawnFantoma() este apelat automat la finalul animației personajului
         }
     }
 }
 
+// --- LOGICA MISCARE FANTOMA ---
 
 function spawnFantoma() {
-    if (!gameActive || verbe2_audio.length ===0) return;
-    verbCurent = verbe2_audio[Math.floor(Math.random() * verbe2_audio.length)];
+    if (!gameActive) return;
+    verbCurent = verbe[Math.floor(Math.random() * verbe.length)];
     bubble.innerText = verbCurent.ro;
     
+    // Resetăm poziția fantomei
     pozitieX = -200; 
     pozitieY = -100; 
     
@@ -107,10 +150,13 @@ function joc() {
     }
 
     pozitieX += vitezaCurenta;
+    // Efect de plutire ușoară pe verticală
     pozitieY = 200 + Math.sin(Date.now() / 500) * 30;
     
     ghostCont.style.right = pozitieX + "px";
     ghostCont.style.top = pozitieY + "px";
+
+    // Dacă fantoma ajunge la personaj
     if (pozitieX > window.innerWidth * 0.45) {
         pierdeViata();
     } else {
@@ -137,6 +183,8 @@ async function pierdeViata() {
     }
 }
 
+// --- ANIMATIE PERSONAJ ---
+
 const asteaptaMs = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 function seteazaIdlePersonaj() {
@@ -148,6 +196,7 @@ async function pornesteAnimatiePersonaj() {
     esteInAnimatiePersonaj = true;
     pauzaFantoma = true; 
 
+    // Cadre de atac
     for (let i = 1; i < imaginiAnimatie.length; i++) {
         personajElem.style.backgroundImage = `url('${imaginiAnimatie[i]}')`;
         await asteaptaMs(100);
@@ -157,6 +206,7 @@ async function pornesteAnimatiePersonaj() {
     await asteaptaMs(400); 
     personajElem.classList.remove("stare-speciala");
 
+    // Revenire la idle
     for (let i = imaginiAnimatie.length - 2; i >= 0; i--) {
         personajElem.style.backgroundImage = `url('${imaginiAnimatie[i]}')`;
         await asteaptaMs(100);
@@ -168,17 +218,8 @@ async function pornesteAnimatiePersonaj() {
     
     if (gameActive) spawnFantoma(); 
 }
-const butonIesire = document.getElementById('iesire');
 
-// Adăugăm evenimentul de click
-butonIesire.addEventListener('click', () => {
-    
-    const destinatie = butonIesire.getAttribute('href'); 
-    window.location.href = destinatie;
-});
-
-
-butonIesire.style.cursor = "pointer";
+// --- FINAL JOC ---
 
 async function terminaJocul(aCastigat) {
     gameActive = false;
@@ -200,36 +241,31 @@ async function terminaJocul(aCastigat) {
     await salveazaScorul(scor);
 }
 
-async function incarcaVerbeBD() {
+async function salveazaScorul(scorFinal) {
     try {
-        console.log("Se încarcă datele de la /api/verbe2_audio...");
-        const raspuns = await fetch('http://localhost:8080/api/verbe2_audio');
-        const date = await raspuns.json();
-
-        console.log("Date primite din tabelul GEN:", date);
-
-        verbe2_audio = date.map(v => ({
-            ro: v.ro_past_simple || "Lipsă RO",
-            en: v.en_past_simple ? v.en_past_simple.toLowerCase().trim() : ""
-        }));
-
-        if (verbe2_audio.length > 0) {
-            console.log("Date încărcate cu succes! Verbe disponibile:", verbe2_audio.length);
-            spawnFantoma(); 
-        } else {
-            console.error("Atenție: Serverul a trimis o listă goală pentru Nivelul 2!");
-        }
-    } catch (error) {
-        console.error("Eroare critică la fetch:", error);
-    }
+        await fetch('/api/battle/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: 1, score: scorFinal, level: 1 })
+        });
+    } catch (e) { console.error("Eroare salvare scor"); }
 }
+const butonIesire = document.getElementById('iesire');
+
+// Adăugăm evenimentul de click
+butonIesire.addEventListener('click', () => {
+   
+    const destinatie = butonIesire.getAttribute('href'); 
+    window.location.href = destinatie;
+});
 
 
-window.onload = async () => {
+butonIesire.style.cursor = "pointer";
+
+// --- INITIALIZARE ---
+window.onload = () => {
     seteazaIdlePersonaj();
-    
-    await incarcaVerbeBD(); 
-    
+    spawnFantoma();
     initializareRecunoastereVocala();
     requestAnimationFrame(joc);
 };

@@ -1,19 +1,40 @@
-// --- DATE JOC ---
 const verbe = [
-    { ro: "a merge", en: "to go" }, { ro: "a manca", en: "to eat" },
-    { ro: "a bea", en: "to drink" }, { ro: "a dormi", en: "to sleep" },
-    { ro: "a vedea", en: "to see" }, { ro: "a vorbi", en: "to speak" },
-    { ro: "a scrie", en: "to write" }, { ro: "a citi", en: "to read" },
-    { ro: "a alerga", en: "to run" }, { ro: "a face", en: "to do" },
-    { ro: "a veni", en: "to come" }, { ro: "a canta", en: "to sing" },
-    { ro: "a lucra", en: "to work" }, { ro: "a sari", en: "to jump" },
-    { ro: "a auzi", en: "to hear" }
+    // Acțiuni de bază și mișcare
+    { ro: "eu merg", en: "I am going" }, { ro: "tu mananci", en: "you are eating" },
+    { ro: "el bea", en: "he is drinking" }, { ro: "ea doarme", en: "she is sleeping" },
+    { ro: "noi alergam", en: "we are running" }, { ro: "voi veniti", en: "you are coming" },
+    { ro: "ei pleaca", en: "they are leaving" }, { ro: "ele sar", en: "they are jumping" },
+
+    // Comunicare și învățare
+    { ro: "eu vorbesc", en: "I am speaking" }, { ro: "tu scrii", en: "you are writing" },
+    { ro: "el citeste", en: "he is reading" }, { ro: "ea asculta", en: "she is listening" },
+    { ro: "noi invatam", en: "we are learning" }, { ro: "voi intrebati", en: "you are asking" },
+    { ro: "ei raspund", en: "they are answering" }, { ro: "eu gandesc", en: "I am thinking" },
+
+    // Muncă și activități zilnice
+    { ro: "tu lucrezi", en: "you are working" }, { ro: "el face", en: "he is doing" },
+    { ro: "ea joaca", en: "she is playing" }, { ro: "noi cantam", en: "we are singing" },
+    { ro: "voi cumparati", en: "you are buying" }, { ro: "ei vand", en: "they are selling" },
+    { ro: "ele deschid", en: "they are opening" }, { ro: "eu inchid", en: "I am closing" },
+
+    // Interacțiuni cu obiecte
+    { ro: "tu aduci", en: "you are bringing" }, { ro: "el ia", en: "he is taking" },
+    { ro: "ea da", en: "she is giving" }, { ro: "noi cautam", en: "we are looking" },
+    { ro: "voi gasiti", en: "you are finding" }, { ro: "ei taie", en: "they are cutting" },
+    { ro: "eu ascund", en: "I am hiding" }, { ro: "tu incerci", en: "you are trying" },
+
+    // Stări, emoții și alte acțiuni
+    { ro: "el rade", en: "he is laughing" }, { ro: "ea plange", en: "she is crying" },
+    { ro: "noi zburam", en: "we are flying" }, { ro: "voi inotati", en: "you are swimming" },
+    { ro: "ei stau", en: "they are staying" }, { ro: "ele asteapta", en: "they are waiting" },
+    { ro: "eu ajut", en: "I am helping" }, { ro: "tu privesti", en: "you are watching" },
+    { ro: "el cade", en: "he is falling" }, { ro: "ea simte", en: "she is feeling" }
 ];
 
 // --- VARIABILE STARE ---
 let vieti = 3;
 let scor = 0;
-let vitezaBaza = 1.2;
+let vitezaBaza = 0.7;
 let vitezaCurenta = vitezaBaza;
 let pozitieX = -200; 
 let pozitieY = 100; 

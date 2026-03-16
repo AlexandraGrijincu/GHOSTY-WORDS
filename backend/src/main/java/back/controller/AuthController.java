@@ -41,7 +41,7 @@ public class AuthController {
     @Autowired
     private ScorService scorService; // Injectăm serviciul de scor
 
-    // DTO pentru request-ul de scor (poate fi mutat și în pachetul dto)
+    // DTO pentru request-ul de scor 
     public static class ScoreRequest {
         public int userId;
         public int score;

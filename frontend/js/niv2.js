@@ -1,18 +1,56 @@
-let verbe2_audio = [];
+const verbe = [
+    // Verbul "A FI" (foarte important, e neregulat în engleză la singular/plural)
+    { ro: "eu am fost", en: "I was" }, { ro: "tu ai fost", en: "you were" },
+    { ro: "noi am fost", en: "we were" }, { ro: "ele au fost", en: "they were" },
 
+    // Acțiuni zilnice
+    { ro: "el a mers", en: "he went" }, { ro: "ea a mancat", en: "she ate" },
+    { ro: "noi am baut", en: "we drank" }, { ro: "voi ati dormit", en: "you slept" },
+    { ro: "ei au vazut", en: "they saw" }, { ro: "eu am vorbit", en: "I spoke" },
+    
+    // Învățare și comunicare
+    { ro: "tu ai scris", en: "you wrote" }, { ro: "el a citit", en: "he read" },
+    { ro: "noi am invatat", en: "we learned" }, { ro: "voi ati inteles", en: "you understood" },
+    { ro: "ea a intrebat", en: "she asked" }, { ro: "el a raspuns", en: "he answered" },
+    { ro: "eu am stiut", en: "I knew" },
+
+    // Mișcare și activități
+    { ro: "ea a alergat", en: "she ran" }, { ro: "noi am facut", en: "we did" },
+    { ro: "voi ati venit", en: "you came" }, { ro: "ele au cantat", en: "they sang" },
+    { ro: "eu am lucrat", en: "I worked" }, { ro: "tu ai sarit", en: "you jumped" },
+    { ro: "el a auzit", en: "he heard" }, { ro: "ea a jucat", en: "she played" },
+    { ro: "noi am inotat", en: "we swam" }, { ro: "ele au zburat", en: "they flew" },
+
+    // Obiecte și interacțiuni
+    { ro: "ei au cumparat", en: "they bought" }, { ro: "eu am vandut", en: "I sold" },
+    { ro: "tu ai deschis", en: "you opened" }, { ro: "el a inchis", en: "he closed" },
+    { ro: "tu ai adus", en: "you brought" }, { ro: "el a luat", en: "he took" },
+    { ro: "ea a dat", en: "she gave" }, { ro: "tu ai gasit", en: "you found" },
+    { ro: "el a pierdut", en: "he lost" }, { ro: "ea a taiat", en: "she cut" },
+
+    // Stări și emoții
+    { ro: "voi ati ras", en: "you laughed" }, { ro: "ele au plans", en: "they cried" },
+    { ro: "eu am stat", en: "I stayed" }, { ro: "noi am simtit", en: "we felt" },
+    { ro: "voi ati iubit", en: "you loved" }, { ro: "ei au urat", en: "they hated" },
+    { ro: "ea a incercat", en: "she tried" }, { ro: "ei au asteptat", en: "they waited" },
+    { ro: "tu ai ajutat", en: "you helped" }, { ro: "el a privit", en: "he watched" },
+    { ro: "noi am cazut", en: "we fell" }, { ro: "voi ati gandit", en: "you thought" }
+];
+
+// --- VARIABILE STARE ---
 let vieti = 3;
 let scor = 0;
 let verbenr = 1;
-let vitezaBaza = 1.0;
+let vitezaBaza = 0.7;
 let vitezaCurenta = vitezaBaza;
 let pozitieX = -200;
 let pozitieY = -200;
 let verbCurent = {};
 let gameActive = true;
 let esteInAnimatiePersonaj = false;
-let pauzaFantoma = false; 
+let pauzaFantoma = false; // Variabilă pentru a îngheța fantoma în timpul animației
 
-
+// --- ELEMENTE DOM ---
 const ghostCont = document.getElementById('container-fantoma');
 const input = document.getElementById('raspuns-utilizator');
 const bubble = document.getElementById('bubble-cuvant');
@@ -22,7 +60,7 @@ const titluFinal = document.getElementById('titlu-final');
 const scorTextFinal = document.getElementById('scor-final');
 const btnNext = document.getElementById('btn-next');
 const personajElem = document.getElementById("personaj");
-const urmatorulNivel=3;
+const urmatorulNivel=2;
 
 const imaginiAnimatie = ["../images/idel.png", "../images/001.png", "../images/002.png", "../images/003.png"];
 
@@ -30,7 +68,7 @@ const imaginiAnimatie = ["../images/idel.png", "../images/001.png", "../images/0
 
 function spawnFantoma() {
     if (!gameActive) return;
-    verbCurent = verbe2_audio[Math.floor(Math.random() * verbe2_audio.length)];
+    verbCurent = verbe[Math.floor(Math.random() * verbe.length)];
     bubble.innerText = verbCurent.ro;
     pozitieX = -200;
     pozitieY = -100;
@@ -117,7 +155,7 @@ async function terminaJocul(aCastigat) {
     await salveazaScorul(scor);
 }
 
-// --- ANIMATIE PERSONAJ  ---
+// --- ANIMATIE PERSONAJ (MODIFICATĂ) ---
 
 const asteaptaMs = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -216,88 +254,6 @@ butonIesire.addEventListener('click', () => {
 
 butonIesire.style.cursor = "pointer";
 
-
-async function actualizeazaProgresServer(nouNivel) {
-    const userId = localStorage.getItem('userId');
-    if (!userId) return;
-
-    try {
-        await fetch('http://localhost:8080/api/user/update-progress', { 
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                userId: parseInt(userId), 
-                level: nouNivel 
-            })
-        });
-    } catch (error) {
-        console.error("Eroare la salvarea progresului:", error);
-    }
-}
-async function salveazaScorul(scorFinal) {
-    const userId = localStorage.getItem('userId'); // Preluăm ID-ul utilizatorului
-    if (!userId) return;
-
-    try {
-        await fetch('/api/battle/save', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                userId: userId, 
-                score: scorFinal, 
-                level: 2 // Nivelul curent care a fost terminat
-            })
-        });
-        
-        localStorage.setItem('userProgress', 3); 
-    } catch (e) { 
-        console.error("Eroare la salvarea progresului:", e); 
-    }
-}
-
-async function incarcaVerbeBD() {
-    try {
-        console.log("Se încarcă datele de la /api/verbe2_audio...");
-        const raspuns = await fetch('http://localhost:8080/api/verbe2_audio');
-        const date = await raspuns.json();
-
-        console.log("Date primite din tabelul GEN:", date);
-
-        verbe2_audio = date.map(v => ({
-            ro: v.ro_past_simple || "Lipsă RO",
-            en: v.en_past_simple ? v.en_past_simple.toLowerCase().trim() : ""
-        }));
-
-        if (verbe2_audio.length > 0) {
-            console.log("Date încărcate cu succes! Verbe disponibile:", verbe2_audio.length);
-            return true; 
-        } else {
-            console.error("Atenție: Serverul a trimis o listă goală!");
-            return false; 
-        }
-    } catch (error) {
-        console.error("Eroare critică la fetch:", error);
-        return false; 
-    }
-}
-
-
-async function pornireJoc() {
-    seteazaIdlePersonaj(); 
-    
-    const succes = await incarcaVerbeBD();
-    
-    if (succes) {
-        console.log("Jocul pornește acum...");
-        spawnFantoma(); 
-        requestAnimationFrame(joc); 
-    } else {
-        console.error("Jocul nu a putut porni deoarece nu sunt date în baza de date.");
-        bubble.innerText = "Eroare date!";
-    }
-}
-
-
 async function terminaJocul(aCastigat) {
     gameActive = false;
     ecranFinal.classList.remove('ascuns');
@@ -324,4 +280,48 @@ async function terminaJocul(aCastigat) {
         btnNext.classList.add('ascuns');
     }
 }
-pornireJoc();
+
+async function actualizeazaProgresServer(nouNivel) {
+    const userId = localStorage.getItem('userId');
+    if (!userId) return;
+
+    try {
+        await fetch('http://localhost:8080/api/user/update-progress', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: parseInt(userId), 
+                level: nouNivel 
+            })
+        });
+    } catch (error) {
+        console.error("Eroare la salvarea progresului:", error);
+    }
+}
+async function salveazaScorul(scorFinal) {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+        console.error("Nu am găsit userId în localStorage!");
+        return;
+    }
+
+    try {
+        await fetch('http://localhost:8080/api/battle/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                userId: parseInt(userId), 
+                score: scorFinal 
+            })
+        });
+        console.log("Scor salvat cu succes!");
+    } catch (e) { 
+        console.error("Eroare la conexiunea cu serverul pentru salvare scor"); 
+    }
+}
+
+
+// --- START ---
+seteazaIdlePersonaj();
+spawnFantoma();
+requestAnimationFrame(joc);
