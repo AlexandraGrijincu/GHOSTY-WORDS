@@ -7,22 +7,21 @@ const verbe = [
     { ro: "a alerga", en: "to run" }, { ro: "a face", en: "to do" },
     { ro: "a veni", en: "to come" }, { ro: "a canta", en: "to sing" },
     { ro: "a lucra", en: "to work" }, { ro: "a sari", en: "to jump" },
-    { ro: "a auzi", en: "to hear" }, { ro: "a juca", en: "to play" }, 
-    { ro: "a invata", en: "to learn" }, { ro: "a gandi", en: "to think" }, 
-    { ro: "a cumpara", en: "to buy" }, { ro: "a vinde", en: "to sell" }, 
-    { ro: "a deschide", en: "to open" }, { ro: "a inchide", en: "to close" }, 
-    { ro: "a zbura", en: "to fly" }, { ro: "a inota", en: "to swim" }, 
-    { ro: "a rade", en: "to laugh" }, { ro: "a plange", en: "to cry" }, 
-    { ro: "a sta", en: "to stay" }, { ro: "a aduce", en: "to bring" }, 
-    { ro: "a lua", en: "to take" }, { ro: "a da", en: "to give" }, 
-    { ro: "a simti", en: "to feel" }, { ro: "a iubi", en: "to love" }, 
-    { ro: "a uri", en: "to hate" }, { ro: "a sti", en: "to know" }, 
-    { ro: "a gasi", en: "to find" }, { ro: "a pierde", en: "to lose" }, 
-    { ro: "a incerca", en: "to try" }, { ro: "a intreba", en: "to ask" }, 
-    { ro: "a raspunde", en: "to answer" }, { ro: "a astepta", en: "to wait" }, 
-    { ro: "a intelege", en: "to understand" }, { ro: "a ajuta", en: "to help" }, 
-    { ro: "a privi", en: "to watch" }, { ro: "a taia", en: "to cut" }, 
-    { ro: "a cadea", en: "to fall" }
+    { ro: "a auzi", en: "to hear" },{ ro: "a juca", en: "to play" }, { ro: "a invata", en: "to learn" },
+    { ro: "a gandi", en: "to think" }, { ro: "a cumpara", en: "to buy" },
+    { ro: "a vinde", en: "to sell" }, { ro: "a deschide", en: "to open" },
+    { ro: "a inchide", en: "to close" }, { ro: "a zbura", en: "to fly" },
+    { ro: "a inota", en: "to swim" }, { ro: "a rade", en: "to laugh" },
+    { ro: "a plange", en: "to cry" }, { ro: "a sta", en: "to stay" },
+    { ro: "a aduce", en: "to bring" }, { ro: "a lua", en: "to take" },
+    { ro: "a da", en: "to give" }, { ro: "a simti", en: "to feel" },
+    { ro: "a iubi", en: "to love" }, { ro: "a uri", en: "to hate" },
+    { ro: "a sti", en: "to know" }, { ro: "a gasi", en: "to find" },
+    { ro: "a pierde", en: "to lose" }, { ro: "a incerca", en: "to try" },
+    { ro: "a intreba", en: "to ask" }, { ro: "a raspunde", en: "to answer" },
+    { ro: "a astepta", en: "to wait" }, { ro: "a intelege", en: "to understand" },
+    { ro: "a ajuta", en: "to help" }, { ro: "a privi", en: "to watch" },
+    { ro: "a taia", en: "to cut" }, { ro: "a cadea", en: "to fall" }
 ];
 
 // --- VARIABILE STARE ---
@@ -49,7 +48,7 @@ const scorTextFinal = document.getElementById('scor-final');
 const btnNext = document.getElementById('btn-next');
 const personajElem = document.getElementById("personaj");
 
-// Imagini animatie
+// ATENȚIE: Am folosit "idel.png" pentru că așa am văzut în pozele tale din Explorer!
 const imaginiAnimatie = ["../images/idel.png", "../images/001.png", "../images/002.png", "../images/003.png"];
 
 const asteaptaMs = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -132,8 +131,8 @@ async function terminaJocul(aCastigat) {
         titluFinal.style.color = "#ff4d4d";
     }
 
-    // Salvare scor cu protectie pentru server offline
-    salveazaScorul(scor).catch(() => console.log("Scorul nu a putut fi trimis la server (Localhost oprit)."));
+    // Apelăm salvarea, dar nu blocăm jocul dacă serverul e oprit
+    salveazaScorul(scor).catch(err => console.log("Server offline, scor nesalvat pe DB."));
 }
 
 function seteazaIdlePersonaj() {
@@ -173,6 +172,7 @@ input.addEventListener('input', async () => {
     if (!gameActive || pauzaFantoma) return;
 
     if (input.value.toLowerCase().trim() === verbCurent.en) {
+        const fantomaImg = document.getElementById('fantoma');
         await pornesteAnimatiePersonaj();
         
         scor += 10;
@@ -186,29 +186,30 @@ input.addEventListener('input', async () => {
     }
 });
 
-// --- SALVARE SERVER ---
+// --- SALVARE SERVER (MODIFICATĂ SĂ NU BLOCHEZE) ---
 async function salveazaScorul(scorFinal) {
     const userId = localStorage.getItem('userId') || 1;
-    // Incercam DOAR daca suntem pe localhost
-    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+    // Doar dacă suntem pe localhost încercăm să trimitem la serverul de Java/Node
+    if (window.location.hostname === "localhost") {
         try {
             await fetch('http://localhost:8080/api/battle/save', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: parseInt(userId), score: scorFinal, level: 1 })
+                body: JSON.stringify({ userId: parseInt(userId), score: scorFinal })
             });
         } catch (e) {
-            console.warn("Serverul local (8080) nu este pornit.");
+            console.warn("Serverul local nu răspunde.");
         }
+    } else {
+        console.log("Ești pe GitHub Pages - Scorul a fost salvat doar local.");
     }
 }
 
-// --- LOGICA BUTON IESIRE (FIXATĂ) ---
+// Buton Ieșire
 const butonIesire = document.getElementById('iesire');
-if (butonIesire) {
+if(butonIesire) {
     butonIesire.addEventListener('click', () => {
-        // Ambele pagini sunt in folderul html/, deci folosim direct numele paginii
-        window.location.href = 'pag.html'; 
+        window.location.href = '../index.html'; 
     });
 }
 
