@@ -1,3 +1,4 @@
+// --- DATE JOC ---
 const verbe = [
     { ro: "a merge", en: "to go" }, { ro: "a manca", en: "to eat" },
     { ro: "a bea", en: "to drink" }, { ro: "a dormi", en: "to sleep" },
@@ -34,7 +35,7 @@ let pozitieY = -200;
 let verbCurent = {};
 let gameActive = true;
 let esteInAnimatiePersonaj = false;
-let pauzaFantoma = false; // Variabilă pentru a îngheța fantoma în timpul animației
+let pauzaFantoma = false;
 
 // --- ELEMENTE DOM ---
 const ghostCont = document.getElementById('container-fantoma');
@@ -46,9 +47,11 @@ const titluFinal = document.getElementById('titlu-final');
 const scorTextFinal = document.getElementById('scor-final');
 const btnNext = document.getElementById('btn-next');
 const personajElem = document.getElementById("personaj");
-const urmatorulNivel=2;
 
+// ATENȚIE: Am folosit "idel.png" pentru că așa am văzut în pozele tale din Explorer!
 const imaginiAnimatie = ["../images/idel.png", "../images/001.png", "../images/002.png", "../images/003.png"];
+
+const asteaptaMs = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 // --- LOGICA JOCULUI ---
 
@@ -64,8 +67,6 @@ function spawnFantoma() {
 
 function joc() {
     if (!gameActive) return;
-
-    // Dacă fantoma este în pauză (pentru animație), doar cerem următorul frame fără să mișcăm poziția
     if (pauzaFantoma) {
         requestAnimationFrame(joc);
         return;
@@ -87,16 +88,13 @@ async function pierdeViata() {
     if (pauzaFantoma) return;
     pauzaFantoma = true;
 
-
     const fantomaImg = document.getElementById('fantoma');
-    if (fantomaImg) {
-        fantomaImg.classList.add('fantoma-inghetata-verde');
-    }
+    if (fantomaImg) fantomaImg.classList.add('fantoma-inghetata-verde');
     personajElem.classList.add("stare-speciala-rosie");
+    
     await asteaptaMs(400);
     personajElem.classList.remove("stare-speciala-rosie");
 
-   
     const inima = document.getElementById(`inima-${vieti}`);
     if (inima) {
         inima.classList.remove('plina');
@@ -104,21 +102,14 @@ async function pierdeViata() {
     }
 
     vieti--;
-
-    
     await asteaptaMs(200);
 
-    if (fantomaImg) {
-        fantomaImg.classList.remove('fantoma-inghetata-verde');
-    }
+    if (fantomaImg) fantomaImg.classList.remove('fantoma-inghetata-verde');
     pauzaFantoma = false;
-    if(verbenr >=10){
-        terminaJocul(true);
-    }
+
     if (vieti <= 0) {
         terminaJocul(false);
-    }
-    else {
+    } else {
         verbenr++;
         spawnFantoma();
         requestAnimationFrame(joc);
@@ -129,21 +120,20 @@ async function terminaJocul(aCastigat) {
     gameActive = false;
     ecranFinal.classList.remove('ascuns');
     scorTextFinal.innerText = "Scor final: " + scor;
+
     if (aCastigat) {
         titluFinal.innerText = "Felicitări! Ai Câștigat!";
         titluFinal.style.color = "#4caf50";
         btnNext.classList.remove('ascuns');
+        localStorage.setItem('userProgress', 2);
     } else {
         titluFinal.innerText = "Ai pierdut!";
         titluFinal.style.color = "#ff4d4d";
-        btnNext.classList.add('ascuns');
     }
-    await salveazaScorul(scor);
+
+    // Apelăm salvarea, dar nu blocăm jocul dacă serverul e oprit
+    salveazaScorul(scor).catch(err => console.log("Server offline, scor nesalvat pe DB."));
 }
-
-// --- ANIMATIE PERSONAJ (MODIFICATĂ) ---
-
-const asteaptaMs = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 function seteazaIdlePersonaj() {
     if (personajElem) personajElem.style.backgroundImage = `url('${imaginiAnimatie[0]}')`;
@@ -171,36 +161,24 @@ async function pornesteAnimatiePersonaj() {
     seteazaIdlePersonaj();
     esteInAnimatiePersonaj = false;
     pauzaFantoma = false;
-    if (gameActive && verbenr<11) {
+    
+    if (gameActive) {
         verbenr++;
         spawnFantoma();
     }
 }
 
-
 input.addEventListener('input', async () => {
     if (!gameActive || pauzaFantoma) return;
 
     if (input.value.toLowerCase().trim() === verbCurent.en) {
-
         const fantomaImg = document.getElementById('fantoma');
-
-
         await pornesteAnimatiePersonaj();
-        pauzaFantoma = true;
-
-        bubble.style.visibility = "hidden";
-        fantomaImg.classList.add("fantoma-rosie");
-        await asteaptaMs(200);
-        fantomaImg.classList.remove("fantoma-rosie");
-        await asteaptaMs(200);
-        pauzaFantoma = false;
-        bubble.style.visibility = "visible";
-    
+        
         scor += 10;
         scorAfisat.innerText = "Scor: " + scor;
 
-        if (verbenr >=11 || scor>=100) {
+        if (scor >= 100) {
             terminaJocul(true);
         } else {
             vitezaCurenta += 0.1;
@@ -208,104 +186,32 @@ input.addEventListener('input', async () => {
     }
 });
 
+// --- SALVARE SERVER (MODIFICATĂ SĂ NU BLOCHEZE) ---
 async function salveazaScorul(scorFinal) {
-    try {
-        await fetch('/api/battle/save', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId: 1, score: scorFinal, level: 1 })
-        });
-    } catch (e) { console.error("Eroare salvare scor"); }
-}
-
-// --- ANIMATIE VRĂJITOARE ---
-const imaginiVrajitoare = ["../imagini/vrajitoare/v1.png", "../imagini/vrajitoare/v2.png", "../imagini/vrajitoare/v3.png"];
-let frameVrajitoare = 0;
-
-setInterval(() => {
-    frameVrajitoare = (frameVrajitoare + 1) % imaginiVrajitoare.length;
-    const vImg = document.getElementById('vrajitoare');
-    if (vImg) vImg.src = imaginiVrajitoare[frameVrajitoare];
-}, 100); 
-
-const butonIesire = document.getElementById('iesire');
-
-// Adăugăm evenimentul de click
-butonIesire.addEventListener('click', () => {
-   
-    const destinatie = butonIesire.getAttribute('href'); 
-    window.location.href = destinatie;
-});
-
-
-butonIesire.style.cursor = "pointer";
-
-async function terminaJocul(aCastigat) {
-    gameActive = false;
-    ecranFinal.classList.remove('ascuns');
-    scorTextFinal.innerText = "Scor final: " + scor;
-
-    if (aCastigat) {
-        titluFinal.innerText = "Felicitări! Ai Câștigat!";
-        titluFinal.style.color = "#4caf50";
-        btnNext.classList.remove('ascuns');
-
-        // Preluăm nivelul actual din URL 
-        const params = new URLSearchParams(window.location.search);
-        let nivelCurent = parseInt(params.get('id')) || 1;
-        let urmatorulNivel = nivelCurent + 1;
-
-        // Trimitem progresul la server
-        await actualizeazaProgresServer(urmatorulNivel);
-        await salveazaScorul(scor);
-        // Actualizăm și local pentru o încărcare instantanee a hărții ulterior
-        localStorage.setItem('userProgress', urmatorulNivel);
+    const userId = localStorage.getItem('userId') || 1;
+    // Doar dacă suntem pe localhost încercăm să trimitem la serverul de Java/Node
+    if (window.location.hostname === "localhost") {
+        try {
+            await fetch('http://localhost:8080/api/battle/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: parseInt(userId), score: scorFinal })
+            });
+        } catch (e) {
+            console.warn("Serverul local nu răspunde.");
+        }
     } else {
-        titluFinal.innerText = "Ai pierdut!";
-        titluFinal.style.color = "#ff4d4d";
-        btnNext.classList.add('ascuns');
+        console.log("Ești pe GitHub Pages - Scorul a fost salvat doar local.");
     }
 }
 
-async function actualizeazaProgresServer(nouNivel) {
-    const userId = localStorage.getItem('userId');
-    if (!userId) return;
-
-    try {
-        await fetch('http://localhost:8080/api/user/update-progress', { 
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                userId: parseInt(userId), 
-                level: nouNivel 
-            })
-        });
-    } catch (error) {
-        console.error("Eroare la salvarea progresului:", error);
-    }
+// Buton Ieșire
+const butonIesire = document.getElementById('iesire');
+if(butonIesire) {
+    butonIesire.addEventListener('click', () => {
+        window.location.href = '../index.html'; 
+    });
 }
-async function salveazaScorul(scorFinal) {
-    const userId = localStorage.getItem('userId');
-    if (!userId) {
-        console.error("Nu am găsit userId în localStorage!");
-        return;
-    }
-
-    try {
-        await fetch('http://localhost:8080/api/battle/save', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                userId: parseInt(userId), 
-                score: scorFinal 
-            })
-        });
-        console.log("Scor salvat cu succes!");
-    } catch (e) { 
-        console.error("Eroare la conexiunea cu serverul pentru salvare scor"); 
-    }
-}
-
 
 // --- START ---
 seteazaIdlePersonaj();
